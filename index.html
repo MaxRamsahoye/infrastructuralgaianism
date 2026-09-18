@@ -285,8 +285,10 @@
     background: var(--bg);
     z-index: 5000;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 28px;
     transition: opacity 0.6s ease;
   }
 
@@ -311,6 +313,11 @@
     stroke-dashoffset: 1;
     animation: draw-triangle 0.45s ease forwards;
     animation-delay: calc(var(--i) * 45ms);
+    transition: stroke 0.4s ease;
+  }
+
+  .loading-screen.is-complete .dome-triangle {
+    stroke: #16a34a;
   }
 
   @keyframes draw-triangle {
@@ -322,6 +329,22 @@
       animation: none;
       stroke-dashoffset: 0;
     }
+  }
+
+  .loading-progress {
+    width: min(160px, 36vw);
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(26, 26, 23, 0.1);
+    overflow: hidden;
+  }
+
+  .loading-progress-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 999px;
+    background: #16a34a;
+    transition: width linear;
   }
 </style>
 </head>
@@ -365,6 +388,9 @@
       <polygon class="dome-triangle" style="--i:33" points="32.00,19.00 19.00,22.88 32.00,22.88" pathLength="1"/>
       <polygon class="dome-triangle" style="--i:34" points="32.00,22.88 45.00,22.88 32.00,19.00" pathLength="1"/>
     </svg>
+    <div class="loading-progress" aria-hidden="true">
+      <div class="loading-progress-fill" id="loadingProgressFill"></div>
+    </div>
   </div>
 
   <div class="progress-bar" aria-hidden="true">
@@ -443,9 +469,26 @@
       var loadingScreen = document.getElementById('loadingScreen');
       if (loadingScreen) {
         var triangles = loadingScreen.querySelectorAll('.dome-triangle');
+        var loadingProgressFill = document.getElementById('loadingProgressFill');
         var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         var lastDelay = (triangles.length - 1) * 45;
-        var totalTime = reduceMotion ? 250 : (lastDelay + 450 + 350);
+        var drawTime = reduceMotion ? 0 : (lastDelay + 450);
+        var totalTime = drawTime + 350;
+
+        if (loadingProgressFill) {
+          if (reduceMotion) {
+            loadingProgressFill.style.width = '100%';
+          } else {
+            requestAnimationFrame(function () {
+              loadingProgressFill.style.transitionDuration = drawTime + 'ms';
+              loadingProgressFill.style.width = '100%';
+            });
+          }
+        }
+
+        setTimeout(function () {
+          loadingScreen.classList.add('is-complete');
+        }, drawTime);
 
         setTimeout(function () {
           loadingScreen.classList.add('is-hidden');
