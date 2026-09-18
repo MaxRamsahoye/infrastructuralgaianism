@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="is-loading">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -273,9 +273,99 @@
     letter-spacing: 0.15em;
     color: #16a34a;
   }
+
+  html.is-loading,
+  html.is-loading body {
+    overflow: hidden;
+  }
+
+  .loading-screen {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    z-index: 5000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.6s ease;
+  }
+
+  .loading-screen.is-hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .dome-loader {
+    width: min(200px, 44vw);
+    height: min(200px, 44vw);
+    overflow: visible;
+  }
+
+  .dome-triangle {
+    fill: none;
+    stroke: #1a1a17;
+    stroke-width: 1.4;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: draw-triangle 0.45s ease forwards;
+    animation-delay: calc(var(--i) * 45ms);
+  }
+
+  @keyframes draw-triangle {
+    to { stroke-dashoffset: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dome-triangle {
+      animation: none;
+      stroke-dashoffset: 0;
+    }
+  }
 </style>
 </head>
 <body>
+
+  <div class="loading-screen" id="loadingScreen" aria-hidden="true">
+    <svg class="dome-loader" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+      <polygon class="dome-triangle" style="--i:0" points="18.33,33.37 10.97,45.00 10.97,31.33" pathLength="1"/>
+      <polygon class="dome-triangle" style="--i:1" points="10.97,31.33 6.00,45.00 9.88,33.37" pathLength="1"/>
+      <polygon class="dome-triangle" style="--i:2" points="10.97,45.00 6.00,45.00 10.97,31.33" pathLength="1"/>
+      <polygon class="dome-triangle" style="--i:3" points="9.88,33.37 6.00,45.00 10.97,45.00" pathLength="1"/>
+      <polygon class="dome-triangle" style="--i:4" points="53.03,45.00 54.12,33.37 45.00,31.33" pathLength="1"/>
+      <polygon class="dome-triangle" style="--i:5" points="40.03,45.00 45.00,31.33 32.00,33.37" pathLength="1"/>
+      <polygon class="dome-triangle" style="--i:6" points="53.03,45.00 45.00,31.33 40.03,45.00" pathLength="1"/>
+      <polygon class="dome-triangle" style="--i:7" points="40.03,45.00 32.00,33.37 23.97,45.00" pathLength="1"/>
+      <polygon class="dome-triangle" style="--i:8" points="53.03,45.00 58.00,45.00 54.12,33.37" pathLength="1"/>
+      <polygon class="dome-triangle" style="--i:9" points="23.97,45.00 32.00,33.37 19.00,31.33" pathLength="1"/>
+      <polygon class="dome-triangle" style="--i:10" points="10.97,45.00 19.00,31.33 9.88,33.37" pathLength="1"/>
+      <polygon class="dome-triangle" style="--i:11" points="23.97,45.00 19.00,31.33 10.97,45.00" pathLength="1"/>
+      <polygon class="dome-triangle" style="--i:12" points="54.12,33.37 58.00,45.00 53.03,31.33" pathLength="1"/>
+      <polygon class="dome-triangle" style="--i:13" points="53.03,31.33 53.03,45.00 45.67,33.37" pathLength="1"/>
+      <polygon class="dome-triangle" style="--i:14" points="58.00,45.00 53.03,45.00 53.03,31.33" pathLength="1"/>
+      <polygon class="dome-triangle" style="--i:15" points="18.33,33.37 10.97,31.33 23.97,22.88" pathLength="1"/>
+      <polygon class="dome-triangle" style="--i:16" points="10.97,31.33 9.88,33.37 19.00,22.88" pathLength="1"/>
+      <polygon class="dome-triangle" style="--i:17" points="18.33,33.37 23.97,22.88 32.00,31.33" pathLength="1"/>
+      <polygon class="dome-triangle" style="--i:18" points="32.00,31.33 40.03,22.88 45.67,33.37" pathLength="1"/>
+      <polygon class="dome-triangle" style="--i:19" points="45.67,33.37 40.03,22.88 53.03,31.33" pathLength="1"/>
+      <polygon class="dome-triangle" style="--i:20" points="53.03,31.33 45.00,22.88 54.12,33.37" pathLength="1"/>
+      <polygon class="dome-triangle" style="--i:21" points="19.00,22.88 9.88,33.37 19.00,31.33" pathLength="1"/>
+      <polygon class="dome-triangle" style="--i:22" points="45.00,31.33 54.12,33.37 45.00,22.88" pathLength="1"/>
+      <polygon class="dome-triangle" style="--i:23" points="32.00,22.88 19.00,31.33 32.00,33.37" pathLength="1"/>
+      <polygon class="dome-triangle" style="--i:24" points="32.00,33.37 45.00,31.33 32.00,22.88" pathLength="1"/>
+      <polygon class="dome-triangle" style="--i:25" points="10.97,31.33 19.00,22.88 23.97,22.88" pathLength="1"/>
+      <polygon class="dome-triangle" style="--i:26" points="23.97,22.88 40.03,22.88 32.00,31.33" pathLength="1"/>
+      <polygon class="dome-triangle" style="--i:27" points="40.03,22.88 45.00,22.88 53.03,31.33" pathLength="1"/>
+      <polygon class="dome-triangle" style="--i:28" points="19.00,22.88 19.00,31.33 32.00,22.88" pathLength="1"/>
+      <polygon class="dome-triangle" style="--i:29" points="45.00,31.33 45.00,22.88 32.00,22.88" pathLength="1"/>
+      <polygon class="dome-triangle" style="--i:30" points="23.97,22.88 19.00,22.88 32.00,19.00" pathLength="1"/>
+      <polygon class="dome-triangle" style="--i:31" points="23.97,22.88 32.00,19.00 40.03,22.88" pathLength="1"/>
+      <polygon class="dome-triangle" style="--i:32" points="40.03,22.88 32.00,19.00 45.00,22.88" pathLength="1"/>
+      <polygon class="dome-triangle" style="--i:33" points="32.00,19.00 19.00,22.88 32.00,22.88" pathLength="1"/>
+      <polygon class="dome-triangle" style="--i:34" points="32.00,22.88 45.00,22.88 32.00,19.00" pathLength="1"/>
+    </svg>
+  </div>
 
   <div class="progress-bar" aria-hidden="true">
     <div class="progress-bar-fill" id="progressBarFill"></div>
@@ -350,6 +440,22 @@
 
   <script>
     (function () {
+      var loadingScreen = document.getElementById('loadingScreen');
+      if (loadingScreen) {
+        var triangles = loadingScreen.querySelectorAll('.dome-triangle');
+        var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var lastDelay = (triangles.length - 1) * 45;
+        var totalTime = reduceMotion ? 250 : (lastDelay + 450 + 350);
+
+        setTimeout(function () {
+          loadingScreen.classList.add('is-hidden');
+          document.documentElement.classList.remove('is-loading');
+          setTimeout(function () {
+            loadingScreen.remove();
+          }, 650);
+        }, totalTime);
+      }
+
       var link = document.querySelector('.scroll-arrow');
       var article = document.getElementById('article');
       var hero = document.querySelector('.hero');
