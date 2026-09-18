@@ -46,27 +46,30 @@
   }
 
   .hero {
+    position: relative;
     height: 100vh;
     width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 0 5vw;
     background-image: url("images/hero-background.jpg");
     background-size: cover;
-    background-position: center 55%;
+    /* Aligns this exact point of the image (the cloud's safe interior
+       center) with the same point of the viewport, at any aspect ratio. */
+    background-position: 48.25% 24.65%;
     background-repeat: no-repeat;
   }
 
   .hero h1 {
+    position: absolute;
+    left: 48.25%;
+    top: 24.65%;
+    transform: translate(-50%, -50%);
+    text-align: center;
     font-family: "ET Bembo", Georgia, "Times New Roman", serif;
     font-weight: 400;
     font-style: normal;
-    font-size: clamp(1.8rem, 4.2vw, 4rem);
-    line-height: 1.1;
+    font-size: clamp(1.5rem, 3.6vw, 3.4rem);
+    line-height: 1.15;
     letter-spacing: 0.01em;
-    max-width: min(640px, 70vw);
+    max-width: min(680px, 38vw);
   }
 </style>
 </head>
