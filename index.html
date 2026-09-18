@@ -253,5 +253,34 @@
     </div>
   </section>
 
+  <script>
+    (function () {
+      var link = document.querySelector('.scroll-arrow');
+      var target = document.getElementById('article');
+      if (!link || !target) return;
+
+      function easeInOutCubic(t) {
+        return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      }
+
+      link.addEventListener('click', function (e) {
+        e.preventDefault();
+        var startY = window.pageYOffset;
+        var endY = target.getBoundingClientRect().top + startY;
+        var distance = endY - startY;
+        var duration = Math.min(1600, Math.max(700, Math.abs(distance) * 0.8));
+        var startTime = null;
+
+        function step(now) {
+          if (startTime === null) startTime = now;
+          var elapsed = now - startTime;
+          var progress = Math.min(elapsed / duration, 1);
+          window.scrollTo(0, startY + distance * easeInOutCubic(progress));
+          if (progress < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      });
+    })();
+  </script>
 </body>
 </html>
