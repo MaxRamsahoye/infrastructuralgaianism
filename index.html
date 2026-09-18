@@ -176,8 +176,8 @@
   .article-list {
     margin-top: 20px;
     padding-left: 1.4em;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
     font-family: "ET Bembo", Georgia, "Times New Roman", serif;
     font-size: clamp(1.3rem, 1.65vw, 1.5rem);
     line-height: 1.2;
@@ -186,6 +186,10 @@
 
   .article-list li {
     margin-top: 20px;
+  }
+
+  .article-list li:first-child {
+    margin-top: 0;
   }
 
   .article-list::marker,
