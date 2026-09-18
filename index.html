@@ -45,10 +45,6 @@
     box-sizing: border-box;
   }
 
-  html {
-    scroll-behavior: smooth;
-  }
-
   html, body {
     background: var(--bg);
     color: var(--fg);
@@ -137,7 +133,7 @@
 
   .article-title {
     font-family: "ET Bembo", Georgia, "Times New Roman", serif;
-    font-weight: 400;
+    font-weight: 600;
     font-size: clamp(2rem, 3.8vw, 3rem);
     line-height: 1.15;
     letter-spacing: 0.01em;
@@ -145,6 +141,7 @@
 
   .article-byline {
     margin-top: 10px;
+    margin-bottom: 32px;
     font-family: "ET Bembo", Georgia, "Times New Roman", serif;
     font-style: italic;
     font-size: 1.3rem;
@@ -153,7 +150,7 @@
   }
 
   .article-content p {
-    margin-top: 10px;
+    margin-top: 20px;
     font-family: "ET Bembo", Georgia, "Times New Roman", serif;
     font-size: clamp(1.2rem, 1.5vw, 1.35rem);
     line-height: 1.15;
@@ -175,7 +172,7 @@
   }
 
   .article-list {
-    margin-top: 10px;
+    margin-top: 20px;
     padding-left: 1.4em;
     font-family: "ET Bembo", Georgia, "Times New Roman", serif;
     font-size: clamp(1.2rem, 1.5vw, 1.35rem);
@@ -184,7 +181,7 @@
   }
 
   .article-list li {
-    margin-top: 10px;
+    margin-top: 20px;
   }
 
   .article-list::marker,
@@ -199,7 +196,7 @@
     <div class="hero-content">
       <h1>Infrastructural Gaianism</h1>
       <p class="hero-description">
-        A systems-change philosophy enacting for the complete redesign
+        A systems-change philosophy enacting the complete redesign
         of society&rsquo;s foundational technical and economic
         infrastructure in alignment with sustainability principles.
       </p>
@@ -233,7 +230,7 @@
       </p>
 
       <p>
-        This approach I call <a href="https://medium.com/@jkinder/on-the-new-infrastructuralism-reading-benjamin-brattons-the-stack-2015-68da6994f6bb"><em>Infrastructural</em></a> <a href="https://en.wikipedia.org/wiki/Gaia_philosophy"><em>Gainism</em></a> &ndash; a systems-change philosophy enacting for the complete redesign of societies foundational technical and economic infrastructure in alignment with sustainability principles (a holistic variation of <a href="https://en.wikipedia.org/wiki/Technogaianism">technological gaianism</a>).
+        This approach I call <a href="https://medium.com/@jkinder/on-the-new-infrastructuralism-reading-benjamin-brattons-the-stack-2015-68da6994f6bb"><em>Infrastructural</em></a> <a href="https://en.wikipedia.org/wiki/Gaia_philosophy"><em>Gainism</em></a> &ndash; a systems-change philosophy enacting the complete redesign of societies foundational technical and economic infrastructure in alignment with sustainability principles (a holistic variation of <a href="https://en.wikipedia.org/wiki/Technogaianism">technological gaianism</a>).
       </p>
 
       <p>
@@ -260,10 +257,6 @@
       var target = document.getElementById('article');
       if (!link || !target) return;
 
-      function easeInOutCubic(t) {
-        return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-      }
-
       link.addEventListener('click', function (e) {
         e.preventDefault();
         var startY = window.pageYOffset;
@@ -276,7 +269,7 @@
           if (startTime === null) startTime = now;
           var elapsed = now - startTime;
           var progress = Math.min(elapsed / duration, 1);
-          window.scrollTo(0, startY + distance * easeInOutCubic(progress));
+          window.scrollTo({ top: startY + distance * progress, left: 0, behavior: 'auto' });
           if (progress < 1) requestAnimationFrame(step);
         }
         requestAnimationFrame(step);
