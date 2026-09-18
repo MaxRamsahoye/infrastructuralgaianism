@@ -348,12 +348,29 @@
       var article = document.getElementById('article');
       var backToTop = document.querySelector('.back-to-top');
       var progressFill = document.getElementById('progressBarFill');
+      function smoothScrollTo(targetY, duration) {
+        var startY = window.pageYOffset;
+        var distance = targetY - startY;
+        var startTime = null;
+
+        function step(now) {
+          if (startTime === null) startTime = now;
+          var elapsed = now - startTime;
+          var progress = Math.min(elapsed / duration, 1);
+          window.scrollTo({ top: Math.round(startY + distance * progress), left: 0, behavior: 'auto' });
+          if (progress < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      }
+
       if (link && article) {
         link.addEventListener('click', function (e) {
           e.preventDefault();
-          // Native compositor-driven smooth scroll: stays smooth even under
-          // main-thread paint load, unlike a hand-rolled rAF + scrollTo loop.
-          article.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          var targetY = article.getBoundingClientRect().top + window.pageYOffset;
+          var distance = Math.abs(targetY - window.pageYOffset);
+          // Half the speed of the previous pass (duration doubled).
+          var duration = Math.min(3200, Math.max(1400, distance * 1.6));
+          smoothScrollTo(targetY, duration);
         });
       }
 
