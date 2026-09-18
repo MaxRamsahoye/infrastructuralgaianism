@@ -40,6 +40,10 @@
     box-sizing: border-box;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   html, body {
     background: var(--bg);
     color: var(--fg);
@@ -57,26 +61,90 @@
     background-repeat: no-repeat;
   }
 
-  .hero h1 {
+  .hero-content {
     position: absolute;
     left: 48.25%;
     top: 24.65%;
     transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
+    max-width: min(680px, 40vw);
+  }
+
+  .hero h1 {
     font-family: "ET Bembo", Georgia, "Times New Roman", serif;
     font-weight: 400;
     font-style: normal;
     font-size: clamp(1.5rem, 3.6vw, 3.4rem);
     line-height: 1.15;
     letter-spacing: 0.01em;
-    max-width: min(680px, 38vw);
+    text-shadow: 0 0 30px rgba(255, 255, 255, 0.7);
+  }
+
+  .hero-description {
+    margin-top: 0.9em;
+    font-family: "ET Bembo", Georgia, "Times New Roman", serif;
+    font-weight: 400;
+    font-style: italic;
+    font-size: clamp(0.85rem, 1.15vw, 1.15rem);
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+    color: #3a3a34;
+    text-shadow: 0 0 24px rgba(255, 255, 255, 0.8), 0 0 10px rgba(255, 255, 255, 0.9);
+  }
+
+  .scroll-arrow {
+    margin-top: 1.6em;
+    display: inline-flex;
+    color: var(--fg);
+    opacity: 0.75;
+    filter: drop-shadow(0 0 16px rgba(255, 255, 255, 0.85));
+    animation: hero-arrow-bob 2.4s ease-in-out infinite;
+    text-decoration: none;
+  }
+
+  .scroll-arrow:hover {
+    opacity: 1;
+  }
+
+  .scroll-arrow svg {
+    width: clamp(22px, 2.4vw, 32px);
+    height: clamp(22px, 2.4vw, 32px);
+    display: block;
+  }
+
+  @keyframes hero-arrow-bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(8px); }
+  }
+
+  .article {
+    min-height: 100vh;
+    width: 100%;
   }
 </style>
 </head>
 <body>
 
   <section class="hero">
-    <h1>Infrastructural Gaianism</h1>
+    <div class="hero-content">
+      <h1>Infrastructural Gaianism</h1>
+      <p class="hero-description">
+        A systems-change philosophy advocating for the complete redesign
+        of society&rsquo;s foundational technical and economic
+        infrastructure in alignment with sustainability principles.
+      </p>
+      <a class="scroll-arrow" href="#article" aria-label="Scroll to article">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 4V20M12 20L5 13M12 20L19 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <section id="article" class="article">
   </section>
 
 </body>
