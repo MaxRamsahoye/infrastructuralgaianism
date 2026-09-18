@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=2">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
   @font-face {
     font-family: "ET Bembo";
@@ -230,7 +230,10 @@
 
   .back-to-top {
     position: fixed;
-    right: 48px;
+    /* Progress bar (12px, right:0) already eats into the right-hand
+       gap, so add its width here to keep the empty space visually
+       equal to the bottom gap. */
+    right: calc(48px + 12px);
     bottom: 48px;
     display: flex;
     align-items: center;
@@ -265,9 +268,10 @@
     margin-top: 48px;
     text-align: center;
     font-family: "Cormorant Garamond", "ET Bembo", Georgia, serif;
+    font-weight: 700;
     font-size: 1.8rem;
-    letter-spacing: 0.5em;
-    color: #5a5a52;
+    letter-spacing: 0.15em;
+    color: #16a34a;
   }
 </style>
 </head>
@@ -348,6 +352,7 @@
     (function () {
       var link = document.querySelector('.scroll-arrow');
       var article = document.getElementById('article');
+      var hero = document.querySelector('.hero');
       var backToTop = document.querySelector('.back-to-top');
       var progressFill = document.getElementById('progressBarFill');
       function smoothScrollTo(targetY, duration) {
@@ -395,9 +400,9 @@
         progress = Math.max(0, Math.min(1, progress));
         if (progressFill) progressFill.style.height = (progress * 100) + '%';
 
-        if (backToTop) {
-          var showThreshold = articleTop - window.innerHeight * 0.5;
-          if (window.scrollY > showThreshold) {
+        if (backToTop && hero) {
+          var heroBottom = hero.offsetTop + hero.offsetHeight;
+          if (window.scrollY >= heroBottom) {
             backToTop.classList.add('is-visible');
           } else {
             backToTop.classList.remove('is-visible');
