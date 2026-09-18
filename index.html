@@ -128,7 +128,7 @@
 
   .article {
     width: 100%;
-    padding: 7rem 6vw 8rem;
+    padding: 7rem 6vw 3rem;
   }
 
   .article-content {
@@ -375,9 +375,8 @@
           e.preventDefault();
           var targetY = article.getBoundingClientRect().top + window.pageYOffset;
           var distance = Math.abs(targetY - window.pageYOffset);
-          // Midpoint between the original pace (distance*0.8, 700-1600ms)
-          // and the halved pace (distance*1.6, 1400-3200ms).
-          var duration = Math.min(2400, Math.max(1050, distance * 1.2));
+          // Speed factor 1.0 (duration = distance * 1.0, clamped).
+          var duration = Math.min(2000, Math.max(875, distance * 1.0));
           smoothScrollTo(targetY, duration);
         });
       }
