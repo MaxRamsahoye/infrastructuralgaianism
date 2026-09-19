@@ -349,6 +349,11 @@
     color: #16a34a;
   }
 
+  ul.article-list li::marker {
+    /* Em dash instead of the default disc bullet. */
+    content: "\2014\0020";
+  }
+
   html, body {
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -907,7 +912,7 @@
         Unlike <em>ReGen</em> and <em>Neos</em>, <em>OneCommunity</em> is defined by an open-source and (insofar as it is possible) non-commercial approach. Like the other projects it has a high cost: &lsquo;One Community is seeking between $20 million to $30 million in grants&hellip; for the purchase of land, startup costs, and the first two phases of the construction project for creating the example villages&rsquo;.
       </p>
 
-      <p class="article-divider" aria-hidden="true">***</p>
+      <p class="article-divider article-divider-yellow" aria-hidden="true">***</p>
 
       <h3 class="article-section-title" id="node-yellowteaming"><a class="yellow-link" href="https://consilienceproject.org/development-in-progress/#:~:text=yellow%20teaming.-,Yellow%20Teaming,such%20issues%20in%20advance%2C%20thereby%20minimizing%20the%20risk%20of%20negative%20externalities.,-The%20practice%20of"><em>Yellow Teaming</em></a>: Accounting for Potential Problems</h3>
 
