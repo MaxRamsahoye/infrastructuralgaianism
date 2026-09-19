@@ -592,18 +592,25 @@
       var themeToggle = document.getElementById('themeToggle');
       var progressFill = document.getElementById('progressBarFill');
 
+      function toggleTheme() {
+        var isDark = document.documentElement.classList.toggle('dark-theme');
+        if (themeToggle) themeToggle.classList.toggle('is-dark', isDark);
+        try {
+          localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        } catch (e) {}
+      }
+
       if (themeToggle) {
         if (document.documentElement.classList.contains('dark-theme')) {
           themeToggle.classList.add('is-dark');
         }
-        themeToggle.addEventListener('click', function () {
-          var isDark = document.documentElement.classList.toggle('dark-theme');
-          themeToggle.classList.toggle('is-dark', isDark);
-          try {
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-          } catch (e) {}
-        });
+        themeToggle.addEventListener('click', toggleTheme);
       }
+
+      function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
       function smoothScrollTo(targetY, duration) {
         var startY = window.pageYOffset;
         var distance = targetY - startY;
@@ -633,9 +640,24 @@
       if (backToTop) {
         backToTop.addEventListener('click', function (e) {
           e.preventDefault();
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+          scrollToTop();
         });
       }
+
+      document.addEventListener('keydown', function (e) {
+        if (e.ctrlKey || e.metaKey || e.altKey) return;
+        var tag = (e.target && e.target.tagName) || '';
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || (e.target && e.target.isContentEditable)) return;
+
+        var key = e.key.toLowerCase();
+        if (key === 't') {
+          e.preventDefault();
+          toggleTheme();
+        } else if (key === 'u') {
+          e.preventDefault();
+          scrollToTop();
+        }
+      });
 
       function onScroll() {
         if (!article) return;
