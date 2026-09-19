@@ -88,6 +88,12 @@
     background-repeat: no-repeat;
   }
 
+  html.dark-theme .hero {
+    /* Same composition, rendered at night; the cloud's safe interior
+       sits at the same relative position so the position above still applies. */
+    background-image: url("images/hero-background-night.jpg");
+  }
+
   .hero-content {
     position: absolute;
     left: 48.25%;
@@ -107,10 +113,16 @@
     font-size: clamp(1.9rem, 3.6vw, 3.4rem);
     line-height: 1.15;
     letter-spacing: 0.01em;
-    /* Hardcoded, not var(--fg): the hero sits on a fixed photo and
-       must stay legible regardless of the light/dark theme toggle. */
+    /* Hardcoded, not var(--fg): the hero sits on a fixed photo (day or
+       night) and must stay legible regardless of the light/dark theme
+       toggle, so it's pinned per-theme below instead of following --fg. */
     color: #1a1a17;
     text-shadow: 0 0 30px rgba(255, 255, 255, 0.7);
+  }
+
+  html.dark-theme .hero h1 {
+    color: #ffffff;
+    text-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
   }
 
   .hero-description {
@@ -125,6 +137,11 @@
     text-shadow: 0 0 24px rgba(255, 255, 255, 0.8), 0 0 10px rgba(255, 255, 255, 0.9);
   }
 
+  html.dark-theme .hero-description {
+    color: #ffffff;
+    text-shadow: 0 0 24px rgba(0, 0, 0, 0.7), 0 0 10px rgba(0, 0, 0, 0.6);
+  }
+
   .scroll-arrow {
     margin-top: 3em;
     display: inline-flex;
@@ -135,6 +152,11 @@
     animation: hero-arrow-bob 2.4s ease-in-out infinite;
     text-decoration: none;
     transition: color 0.2s ease, opacity 0.2s ease;
+  }
+
+  html.dark-theme .scroll-arrow {
+    color: #ffffff;
+    filter: drop-shadow(0 0 16px rgba(0, 0, 0, 0.7));
   }
 
   .scroll-arrow:hover {
