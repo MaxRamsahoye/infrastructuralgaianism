@@ -284,12 +284,31 @@
     font-size: clamp(1.2rem, 1.35vw, 1.25rem);
   }
 
+  .article-content p.article-quote-highlight {
+    /* Same light-yellow highlight the source doc used on this quote.
+       Text color is pinned regardless of theme, same reasoning as the
+       hero text: this fill is fixed, not theme-following. */
+    background: #fff2cc;
+    color: #1a1a17;
+    padding: 20px 24px;
+    border-radius: 6px;
+  }
+
   .article-content p.article-quote-attribution {
     margin-top: 8px;
     margin-right: 120px;
     font-style: italic;
     font-size: 1rem;
     color: var(--muted);
+  }
+
+  .article-content a.yellow-link {
+    color: #a16207;
+    border-bottom-color: rgba(161, 98, 7, 0.35);
+  }
+
+  .article-content a.yellow-link:hover {
+    border-bottom-color: #a16207;
   }
 
   .article-content a {
@@ -881,14 +900,14 @@
 
       <p class="article-divider" aria-hidden="true">***</p>
 
-      <h3 class="article-section-title"><a href="https://consilienceproject.org/development-in-progress/#:~:text=yellow%20teaming.-,Yellow%20Teaming,such%20issues%20in%20advance%2C%20thereby%20minimizing%20the%20risk%20of%20negative%20externalities.,-The%20practice%20of"><em>Yellow Teaming</em></a>: Accounting for Potential Problems</h3>
+      <h3 class="article-section-title"><a class="yellow-link" href="https://consilienceproject.org/development-in-progress/#:~:text=yellow%20teaming.-,Yellow%20Teaming,such%20issues%20in%20advance%2C%20thereby%20minimizing%20the%20risk%20of%20negative%20externalities.,-The%20practice%20of"><em>Yellow Teaming</em></a>: Accounting for Potential Problems</h3>
 
-      <p class="article-quote">
+      <p class="article-quote article-quote-highlight">
         &ldquo;The &lsquo;yellow team&rsquo; concept takes this idea in another direction, assessing a project and its implementation in the context of all other aspects of reality that it will touch over the full course of its lifetime. Where red teaming attempts to assure that a plan doesn&rsquo;t fail, <em>yellow teaming</em> attempts to ensure it doesn&rsquo;t cause unexpected harms or problems elsewhere. It aims to account for how our typical approaches to solution design tend to make problems worse in the long run, and provide guidance to address such issues in advance, thereby minimizing the risk of negative externalities.&rdquo;
       </p>
 
       <p class="article-quote-attribution">
-        &mdash; <a href="https://consilienceproject.org/development-in-progress/">Development in Progress</a>, <em>The Consilience Project</em> (2024)
+        &mdash; <a class="yellow-link" href="https://consilienceproject.org/development-in-progress/">Development in Progress</a>, <em>The Consilience Project</em> (2024)
       </p>
 
       <h4 class="article-subsection-title">Socio-Ecological Externalities of System-to-System Transition</h4>
