@@ -242,7 +242,12 @@
   .article-subsection-title {
     font-family: "ET Bembo", Georgia, "Times New Roman", serif;
     font-weight: 600;
-    font-size: clamp(1.3rem, 1.8vw, 1.6rem);
+    /* ET Bembo has no 700-weight face, so nudging past the loaded 600
+       SemiBoldOSF with a thin stroke (same trick as .article-title em)
+       reads slightly bolder without the browser synthesizing a fake,
+       distorted bold. */
+    -webkit-text-stroke: 0.4px currentColor;
+    font-size: clamp(1.45rem, 2vw, 1.8rem);
     line-height: 1.2;
     letter-spacing: 0.01em;
     margin-top: 48px;
@@ -275,13 +280,13 @@
   }
 
   .article-content p.article-quote {
-    margin-right: 64px;
+    margin-right: 120px;
     font-size: clamp(1.2rem, 1.35vw, 1.25rem);
   }
 
   .article-content p.article-quote-attribution {
     margin-top: 8px;
-    margin-right: 64px;
+    margin-right: 120px;
     font-style: italic;
     font-size: 1rem;
     color: var(--muted);
@@ -589,7 +594,7 @@
 
     .article-content p.article-quote,
     .article-content p.article-quote-attribution {
-      margin-right: 24px;
+      margin-right: 40px;
     }
 
     .article-gallery {
