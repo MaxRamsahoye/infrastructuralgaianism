@@ -245,7 +245,6 @@
     font-size: clamp(1.3rem, 1.8vw, 1.6rem);
     line-height: 1.2;
     letter-spacing: 0.01em;
-    color: #16a34a;
     margin-top: 48px;
     margin-bottom: 4px;
   }
@@ -278,6 +277,14 @@
   .article-content p.article-quote {
     margin-right: 64px;
     font-size: clamp(1.2rem, 1.35vw, 1.25rem);
+  }
+
+  .article-content p.article-quote-attribution {
+    margin-top: 8px;
+    margin-right: 64px;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--muted);
   }
 
   .article-content a {
@@ -580,7 +587,8 @@
       font-size: 1.6rem;
     }
 
-    .article-content p.article-quote {
+    .article-content p.article-quote,
+    .article-content p.article-quote-attribution {
       margin-right: 24px;
     }
 
@@ -866,11 +874,15 @@
 
       <h3 class="article-section-title"><a href="https://consilienceproject.org/development-in-progress/#:~:text=yellow%20teaming.-,Yellow%20Teaming,such%20issues%20in%20advance%2C%20thereby%20minimizing%20the%20risk%20of%20negative%20externalities.,-The%20practice%20of"><em>Yellow Teaming</em></a>: Accounting for Potential Problems</h3>
 
-      <p>
-        The &ldquo;yellow team&rdquo; concept takes this idea in another direction, assessing a project and its implementation in the context of all other aspects of reality that it will touch over the full course of its lifetime. Where red teaming attempts to assure that a plan doesn&rsquo;t fail, <em>yellow teaming</em> attempts to ensure it doesn&rsquo;t cause unexpected harms or problems elsewhere. It aims to account for how our typical approaches to solution design tend to make problems worse in the long run, and provide guidance to address such issues in advance, thereby minimizing the risk of negative externalities.
+      <p class="article-quote">
+        &ldquo;The &lsquo;yellow team&rsquo; concept takes this idea in another direction, assessing a project and its implementation in the context of all other aspects of reality that it will touch over the full course of its lifetime. Where red teaming attempts to assure that a plan doesn&rsquo;t fail, <em>yellow teaming</em> attempts to ensure it doesn&rsquo;t cause unexpected harms or problems elsewhere. It aims to account for how our typical approaches to solution design tend to make problems worse in the long run, and provide guidance to address such issues in advance, thereby minimizing the risk of negative externalities.&rdquo;
       </p>
 
-      <h4 class="article-subsection-title">&gt; Socio-Ecological Externalities of System-to-System Transition</h4>
+      <p class="article-quote-attribution">
+        &mdash; <a href="https://consilienceproject.org/development-in-progress/">Development in Progress</a>, <em>The Consilience Project</em> (2024)
+      </p>
+
+      <h4 class="article-subsection-title">Socio-Ecological Externalities of System-to-System Transition</h4>
 
       <p>
         The primary problem of <em>infrastructural gaianism</em> is the initial economic costs and negative externalities of transition: building a new decentralised network of high-tech, eco-villages is highly capital-intensive and requires transporting materials via existing, unsustainable global supply chains.
@@ -884,19 +896,19 @@
         See <a href="https://gemini.google.com/app/74ee98f75dc4b7c0">Gemini</a> chat for a more extensive investigation.
       </p>
 
-      <h4 class="article-subsection-title">&gt; Initial Limits to Decentralisation</h4>
+      <h4 class="article-subsection-title">Initial Limits to Decentralisation</h4>
 
       <p>
         Another problem is the initial limits of decentralisation: the most advanced medical facilities, specialised manufacturing facilities, geographically-distributed minerals etc. may require interfacing with the market. The first and second may be prohibitively expensive or even proprietary. The third may require a node in the network that has access. In short, there are major bottlenecks, thresholds and degrees to actually developing an independent, self-sufficient civilisation (on Earth, let alone a Mars colony).
       </p>
 
-      <h4 class="article-subsection-title">&gt; Power-Response</h4>
+      <h4 class="article-subsection-title">Power-Response</h4>
 
       <p>
         If perceived as a threat to the established order of states and markets, communities may experience an immune response and suppressive measures from power. <a href="https://www.filmsforaction.org/watch/project-cybersyn/"><em>Project Cybersyn</em></a> in Chile is a case study to point to here. As is the general history of Western imperialism and anti-communism (containment).
       </p>
 
-      <h4 class="article-subsection-title">&gt; The Problem of Parallel Civilisations</h4>
+      <h4 class="article-subsection-title">The Problem of Parallel Civilisations</h4>
 
       <p>
         It doesn&rsquo;t ultimately matter if there is a decentralised network of eco-cities &ndash; even if half the world transitions to this &ndash; if the old civilisation keeps on running and fucks everything up &ndash; likely by engaging in power competition with the new civilisation (to the point above).
