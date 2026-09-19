@@ -239,6 +239,17 @@
     margin-bottom: 8px;
   }
 
+  .article-subsection-title {
+    font-family: "ET Bembo", Georgia, "Times New Roman", serif;
+    font-weight: 600;
+    font-size: clamp(1.3rem, 1.8vw, 1.6rem);
+    line-height: 1.2;
+    letter-spacing: 0.01em;
+    color: #16a34a;
+    margin-top: 48px;
+    margin-bottom: 4px;
+  }
+
   .article-content strong {
     /* ET Bembo has no 700-weight face, so the browser's default bold
        would synthesize one (same problem as .article-title em above).
@@ -262,6 +273,11 @@
     font-size: clamp(1.45rem, 1.65vw, 1.5rem);
     line-height: 1.2;
     letter-spacing: 0.005em;
+  }
+
+  .article-content p.article-quote {
+    margin-right: 64px;
+    font-size: clamp(1.2rem, 1.35vw, 1.25rem);
   }
 
   .article-content a {
@@ -553,6 +569,10 @@
     .article-list {
       font-size: 1.6rem;
     }
+
+    .article-content p.article-quote {
+      margin-right: 24px;
+    }
   }
 </style>
 </head>
@@ -617,7 +637,7 @@
       </p>
 
       <p>
-        In this article I aim to set out the history of infrastructural gainism as I have encountered it across a number of interconnected nodes.
+        In this article I aim to set out the history of infrastructural gaianism as I have encountered it across a number of interconnected nodes.
       </p>
 
       <ol class="article-list">
@@ -728,7 +748,7 @@
         <em>ReGen Villages</em> is a design initiative for developing a new form of ecologically sustainable (regenerative), technologically sophisticated urban infrastructure. As it was described in its original UN Brief (2015) <a href="https://www.academia.edu/36299899/ReGen_Villages_Integrated_Village_Designs_for_Thriving_Regenerative_Communities"><em>RegenVillages &ndash; Integrated village designs for thriving regenerative communities</em></a>:
       </p>
 
-      <p>
+      <p class="article-quote">
         &lsquo;This concept for <em>modern village design</em> is&hellip; integrating proven technologies in innovative ways, such as built-environment energy positive dwellings, renewable power and micro-grid distribution, living machines for water and waste management, and organic aquaponic food production at scale, all combined in a <em>total community management system</em>.&rsquo;
       </p>
 
@@ -760,7 +780,7 @@
         On the eco-side, the <a href="https://vision.neos.life/village-vision">vision for the village</a> reads:
       </p>
 
-      <p>
+      <p class="article-quote">
         &ldquo;the blueprint for a self-sufficient sanctuary is taking root&mdash;a place where eco-innovation harmonizes with nature&rsquo;s wisdom. From an organic farm to energy-efficient dwellings, each element is designed to nourish, inspire, and respect the earth. Witness the blossoming of a land destined for healing, and a deep commitment to environmental stewardship.&rdquo;
       </p>
 
@@ -768,11 +788,11 @@
         On the soul-side, Neos is the home of the <a href="https://www.neos.center/"><em>Center for a New Humanity</em></a> and the New Human movement:
       </p>
 
-      <p>
+      <p class="article-quote">
         &ldquo;we are gathering the bright souls at the leading edge of knowledge into the dawn of a new humanity and a new earth. Join us for specialist programs and life-changing journeys based in the interconnectivity of deep prophetic wisdom and original revelatory insight into the evolution of the human being currently underway.&rdquo;
       </p>
 
-      <p>
+      <p class="article-quote">
         &ldquo;Wellness is just one piece of the wellbeing picture we are developing at Neos for mind, body, soul and spirit &mdash; from trauma and chronic disease healing to city detoxes to rewilding, expanding your consciousness, and reskilling towards your true life purpose.&rdquo;
       </p>
 
@@ -788,7 +808,7 @@
         The words of the female co-founder and creative lead resonated with me the most, particularly the recognition that (beyond complex discussions of &lsquo;the metacrisis&rsquo;) the solution is actually quite simple. We have all the knowledge we need to combine a process of building sustainable external structures with one of cultivating enlightened internal structures:
       </p>
 
-      <p>
+      <p class="article-quote">
         &ldquo;There&rsquo;s a way of life that we could all be living where people feel deep interconnectedness within all of us&hellip; We need to just remind each other we are here now to birth a completely different version of this planet. Everybody has something that they&rsquo;re meant to do. We know what brings us health. We know what brings us vitality. We know how to give back to the earth. We already have all of the answers. Nothing new needed here. We just haven&rsquo;t brought it all together yet.&rdquo;
       </p>
 
@@ -804,7 +824,7 @@
         Finally, another notable mention is Jae Sabol&rsquo;s <em>OneCommunityGlobal</em>, a &lsquo;100%-volunteer&rsquo; run initiative creating designs for ecovillages:
       </p>
 
-      <p>
+      <p class="article-quote">
         &lsquo;our mission is to help people create a better world by demonstrating a more sustainable and enriching way of living and open source everything needed for replication&hellip; this includes free-shared and &ldquo;Highest Good&rdquo; approaches to food, energy, housing, education, for-profit and non-profit economic design, social architecture, fulfilled living, global stewardship practices, and more.&rsquo;
       </p>
 
@@ -812,7 +832,7 @@
         Like <em>The Venus Project</em>&rsquo;s <em>theory of change</em>, <em>OneCommunity</em>&rsquo;s goal was to create the first hub as basis for further ones:
       </p>
 
-      <p>
+      <p class="article-quote">
         &lsquo;Combined, we will use these to build One Community as the first of many teacher/demonstration hubs. These hubs will form a global collaborative to provide even more research, blueprints, and necessary support for successively easier, more affordable, and creative duplication everywhere.&rsquo;
       </p>
 
@@ -823,6 +843,55 @@
       <p>
         Unlike <em>ReGen</em> and <em>Neos</em>, <em>OneCommunity</em> is defined by an open-source and (insofar as it is possible) non-commercial approach. Like the other projects it has a high cost: &lsquo;One Community is seeking between $20 million to $30 million in grants&hellip; for the purchase of land, startup costs, and the first two phases of the construction project for creating the example villages&rsquo;.
       </p>
+
+      <p class="article-divider" aria-hidden="true">***</p>
+
+      <h3 class="article-section-title"><a href="https://consilienceproject.org/development-in-progress/#:~:text=yellow%20teaming.-,Yellow%20Teaming,such%20issues%20in%20advance%2C%20thereby%20minimizing%20the%20risk%20of%20negative%20externalities.,-The%20practice%20of"><em>Yellow Teaming</em></a>: Accounting for Potential Problems</h3>
+
+      <p>
+        The &ldquo;yellow team&rdquo; concept takes this idea in another direction, assessing a project and its implementation in the context of all other aspects of reality that it will touch over the full course of its lifetime. Where red teaming attempts to assure that a plan doesn&rsquo;t fail, <em>yellow teaming</em> attempts to ensure it doesn&rsquo;t cause unexpected harms or problems elsewhere. It aims to account for how our typical approaches to solution design tend to make problems worse in the long run, and provide guidance to address such issues in advance, thereby minimizing the risk of negative externalities.
+      </p>
+
+      <h4 class="article-subsection-title">&gt; Socio-Ecological Externalities of System-to-System Transition</h4>
+
+      <p>
+        The primary problem of <em>infrastructural gaianism</em> is the initial economic costs and negative externalities of transition: building a new decentralised network of high-tech, eco-villages is highly capital-intensive and requires transporting materials via existing, unsustainable global supply chains.
+      </p>
+
+      <p>
+        There is hence a time period in which the project as a whole may be harmful to the environment and other populations around the world &ndash; though it would eventually become net positive over longer time horizons and ultimately enable a sustainable future for everyone.
+      </p>
+
+      <p>
+        See <a href="https://gemini.google.com/app/74ee98f75dc4b7c0">Gemini</a> chat for a more extensive investigation.
+      </p>
+
+      <h4 class="article-subsection-title">&gt; Initial Limits to Decentralisation</h4>
+
+      <p>
+        Another problem is the initial limits of decentralisation: the most advanced medical facilities, specialised manufacturing facilities, geographically-distributed minerals etc. may require interfacing with the market. The first and second may be prohibitively expensive or even proprietary. The third may require a node in the network that has access. In short, there are major bottlenecks, thresholds and degrees to actually developing an independent, self-sufficient civilisation (on Earth, let alone a Mars colony).
+      </p>
+
+      <h4 class="article-subsection-title">&gt; Power-Response</h4>
+
+      <p>
+        If perceived as a threat to the established order of states and markets, communities may experience an immune response and suppressive measures from power. <a href="https://www.filmsforaction.org/watch/project-cybersyn/"><em>Project Cybersyn</em></a> in Chile is a case study to point to here. As is the general history of Western imperialism and anti-communism (containment).
+      </p>
+
+      <h4 class="article-subsection-title">&gt; The Problem of Parallel Civilisations</h4>
+
+      <p>
+        It doesn&rsquo;t ultimately matter if there is a decentralised network of eco-cities &ndash; even if half the world transitions to this &ndash; if the old civilisation keeps on running and fucks everything up &ndash; likely by engaging in power competition with the new civilisation (to the point above).
+      </p>
+
+      <p>
+        See also:
+      </p>
+
+      <ul class="article-list">
+        <li><a href="https://docs.google.com/document/d/1K6Km4B8CthHb4ElHlG23gUhGRM7ens6t9BjW_rGG65k/edit?usp=sharing"><em>Notes on Civilisation Dynamics &amp; Design</em></a></li>
+        <li><em>Global Maxima</em></li>
+      </ul>
     </div>
   </section>
 
