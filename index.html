@@ -447,16 +447,26 @@
 
   .article-gallery {
     margin-top: 40px;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 16px;
   }
 
   .article-gallery img {
     display: block;
     width: 100%;
-    height: auto;
+    height: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
     border-radius: 6px;
+  }
+
+  /* When the gallery has an odd number of images, the first one (which
+     is then also the odd-numbered-from-the-end one) spans both columns
+     and sits alone in its own row; the rest pair up 2-per-row. */
+  .article-gallery img:first-child:nth-last-child(odd) {
+    grid-column: 1 / -1;
+    aspect-ratio: 21 / 9;
   }
 
   html.is-loading,
@@ -573,6 +583,14 @@
     .article-content p.article-quote {
       margin-right: 24px;
     }
+
+    .article-gallery {
+      grid-template-columns: 1fr;
+    }
+
+    .article-gallery img:first-child:nth-last-child(odd) {
+      aspect-ratio: 4 / 3;
+    }
   }
 </style>
 </head>
@@ -641,11 +659,11 @@
       </p>
 
       <ol class="article-list">
-        <li>Jacque Fresco&rsquo;s <em>City-Systems</em> (<span class="num">1985</span>)</li>
-        <li>Jordan Hall&rsquo;s <em>Civium Project</em> (<span class="num">2020</span>)</li>
-        <li>James Ehrlich&rsquo;s <em>ReGen Villages</em> (<span class="num">2015, 2026+</span>)</li>
-        <li>Vincent Daranyi and Karen Aiyana Birch&rsquo;s <em>Neos Village</em> (<span class="num">2023 - 2028</span>)</li>
-        <li>Jae Sabol&rsquo;s <em>OneCommunityGlobal</em> (<span class="num">2010</span>)</li>
+        <li><a href="#node-fresco">Jacque Fresco&rsquo;s <em>City-Systems</em> (<span class="num">1985</span>)</a></li>
+        <li><a href="#node-hall">Jordan Hall&rsquo;s <em>Civium Project</em> (<span class="num">2020</span>)</a></li>
+        <li><a href="#node-ehrlich">James Ehrlich&rsquo;s <em>ReGen Villages</em> (<span class="num">2015, 2026+</span>)</a></li>
+        <li><a href="#node-neos">Vincent Daranyi and Karen Aiyana Birch&rsquo;s <em>Neos Village</em> (<span class="num">2023 - 2028</span>)</a></li>
+        <li><a href="#node-sabol">Jae Sabol&rsquo;s <em>OneCommunityGlobal</em> (<span class="num">2010</span>)</a></li>
       </ol>
 
       <p>
@@ -673,7 +691,7 @@
         <img src="images/fresco/fresco-4.jpg" alt="Aerial view of a concentric-ring Venus Project city layout radiating out from a central hub.">
       </div>
 
-      <h3 class="article-section-title">Jacque Fresco&rsquo;s <a href="https://www.resourcebasedeconomy.org/about/city-with-a-purpose/"><em>Venus Project</em> or <em>City-Systems</em></a> (<span class="num">1985</span>)</h3>
+      <h3 class="article-section-title" id="node-fresco">Jacque Fresco&rsquo;s <a href="https://www.resourcebasedeconomy.org/about/city-with-a-purpose/"><em>Venus Project</em> or <em>City-Systems</em></a> (<span class="num">1985</span>)</h3>
 
       <p>
         The earliest node I came across was <a href="https://www.thevenusproject.com/"><em>The Venus Project</em></a> by the cybernetician and social engineer (or &lsquo;sociocyberneer&rsquo; to use his own portmanteau) Jacque Fresco. Fresco designed futuristic <a href="https://www.thevenusproject.com/resource-based-economy/environment/circular-city/">circular cities</a>, composed of a central hub and concentric rings &ndash; separating residential, agricultural, and industrial zones. The purpose of these technologically advanced, garden cities would be to &lsquo;act as universities for global resource management&hellip; and testing grounds for each future phase of global development&rsquo;.
@@ -710,7 +728,7 @@
         <img src="images/hall/hall-3.jpg" alt="Render of a spiralling green-roofed building surrounded by futuristic domed structures and wind turbines.">
       </div>
 
-      <h3 class="article-section-title">Jordan Hall&rsquo;s <a href="https://medium.com/deep-code/from-city-to-civium-5838e0cdfe31"><em>Civium Project</em></a> (<span class="num">2020</span>)</h3>
+      <h3 class="article-section-title" id="node-hall">Jordan Hall&rsquo;s <a href="https://medium.com/deep-code/from-city-to-civium-5838e0cdfe31"><em>Civium Project</em></a> (<span class="num">2020</span>)</h3>
 
       <p>
         Between 2020-21, Jordan Hall recorded a series entitled <a href="https://youtu.be/yXBAtdyBto0?si=dwmbKLJfo7zuZrd-"><em>The Civium Project</em></a> (15 episodes in total), later followed by an essay <a href="https://youtu.be/yXBAtdyBto0?si=SZawX0UlEEYaqAU0"><em>From City to Civium</em></a> (2023).
@@ -742,7 +760,7 @@
         <img src="images/ehrlich/ehrlich-5.jpg" alt="Aerial render of a ReGen-style village around a central lake, with fields, greenhouses, and clustered homes.">
       </div>
 
-      <h3 class="article-section-title">James Ehrlich&rsquo;s <a href="https://www.regenvillages.com/"><em>ReGen Villages</em></a> (<span class="num">2015, 2026+</span>)</h3>
+      <h3 class="article-section-title" id="node-ehrlich">James Ehrlich&rsquo;s <a href="https://www.regenvillages.com/"><em>ReGen Villages</em></a> (<span class="num">2015, 2026+</span>)</h3>
 
       <p>
         <em>ReGen Villages</em> is a design initiative for developing a new form of ecologically sustainable (regenerative), technologically sophisticated urban infrastructure. As it was described in its original UN Brief (2015) <a href="https://www.academia.edu/36299899/ReGen_Villages_Integrated_Village_Designs_for_Thriving_Regenerative_Communities"><em>RegenVillages &ndash; Integrated village designs for thriving regenerative communities</em></a>:
@@ -766,7 +784,7 @@
 
       <p class="article-divider" aria-hidden="true">***</p>
 
-      <h3 class="article-section-title">Vincent Daranyi &amp; Karen Aiyana Birch&rsquo;s <a href="https://neos.life/"><em>Neos Village</em></a> (<span class="num">2023 - 2028</span>)</h3>
+      <h3 class="article-section-title" id="node-neos">Vincent Daranyi &amp; Karen Aiyana Birch&rsquo;s <a href="https://neos.life/"><em>Neos Village</em></a> (<span class="num">2023 - 2028</span>)</h3>
 
       <p>
         Co-founded by Vincent Daranyi and Karen Aiyana Birch, <em>Neos Village</em> is a planned &lsquo;Wellbeing Sanctuary&rsquo; in Alentejo, Portugal with the mission &lsquo;to model a new way of being &amp; living&rsquo;. The project was first conceptualised in 2023, and has a <a href="https://neos.life/village#progress">timeline</a> for the first residents to move in at the end of 2028. The ultimate goal is for the village to host 1000 residents across its 1000 acres.
@@ -818,7 +836,7 @@
 
       <p class="article-divider" aria-hidden="true">***</p>
 
-      <h3 class="article-section-title">Jae Sabol&rsquo;s <a href="https://onecommunityglobal.org/"><em>OneCommunityGlobal</em></a> (<span class="num">2010</span>)</h3>
+      <h3 class="article-section-title" id="node-sabol">Jae Sabol&rsquo;s <a href="https://onecommunityglobal.org/"><em>OneCommunityGlobal</em></a> (<span class="num">2010</span>)</h3>
 
       <p>
         Finally, another notable mention is Jae Sabol&rsquo;s <em>OneCommunityGlobal</em>, a &lsquo;100%-volunteer&rsquo; run initiative creating designs for ecovillages:
@@ -883,15 +901,6 @@
       <p>
         It doesn&rsquo;t ultimately matter if there is a decentralised network of eco-cities &ndash; even if half the world transitions to this &ndash; if the old civilisation keeps on running and fucks everything up &ndash; likely by engaging in power competition with the new civilisation (to the point above).
       </p>
-
-      <p>
-        See also:
-      </p>
-
-      <ul class="article-list">
-        <li><a href="https://docs.google.com/document/d/1K6Km4B8CthHb4ElHlG23gUhGRM7ens6t9BjW_rGG65k/edit?usp=sharing"><em>Notes on Civilisation Dynamics &amp; Design</em></a></li>
-        <li><em>Global Maxima</em></li>
-      </ul>
     </div>
   </section>
 
