@@ -239,6 +239,16 @@
     margin-bottom: 8px;
   }
 
+  /* The divider's asterisks sit high in their line box, and this
+     heading's larger font adds more lead-in space above its own
+     cap-height than the paragraph above the divider has - so equal
+     box-model margins here still read as more space below the
+     asterisks than above. Trim the heading's margin-top only in this
+     adjacency to compensate, verified against the rendered glyph ink. */
+  .article-divider + .article-section-title {
+    margin-top: 67px;
+  }
+
   .article-subsection-title {
     font-family: "ET Bembo", Georgia, "Times New Roman", serif;
     font-weight: 600;
