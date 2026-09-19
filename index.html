@@ -379,6 +379,11 @@
     width: 100%;
     height: 0%;
     background: #16a34a;
+    transition: background-color 0.3s ease;
+  }
+
+  .progress-bar-fill.is-yellow {
+    background: #a16207;
   }
 
   .back-to-top {
@@ -900,7 +905,7 @@
 
       <p class="article-divider" aria-hidden="true">***</p>
 
-      <h3 class="article-section-title"><a class="yellow-link" href="https://consilienceproject.org/development-in-progress/#:~:text=yellow%20teaming.-,Yellow%20Teaming,such%20issues%20in%20advance%2C%20thereby%20minimizing%20the%20risk%20of%20negative%20externalities.,-The%20practice%20of"><em>Yellow Teaming</em></a>: Accounting for Potential Problems</h3>
+      <h3 class="article-section-title" id="node-yellowteaming"><a class="yellow-link" href="https://consilienceproject.org/development-in-progress/#:~:text=yellow%20teaming.-,Yellow%20Teaming,such%20issues%20in%20advance%2C%20thereby%20minimizing%20the%20risk%20of%20negative%20externalities.,-The%20practice%20of"><em>Yellow Teaming</em></a>: Accounting for Potential Problems</h3>
 
       <p class="article-quote article-quote-highlight">
         &ldquo;The &lsquo;yellow team&rsquo; concept takes this idea in another direction, assessing a project and its implementation in the context of all other aspects of reality that it will touch over the full course of its lifetime. Where red teaming attempts to assure that a plan doesn&rsquo;t fail, <em>yellow teaming</em> attempts to ensure it doesn&rsquo;t cause unexpected harms or problems elsewhere. It aims to account for how our typical approaches to solution design tend to make problems worse in the long run, and provide guidance to address such issues in advance, thereby minimizing the risk of negative externalities.&rdquo;
@@ -929,7 +934,7 @@
       <h4 class="article-subsection-title">Power-Response</h4>
 
       <p>
-        If perceived as a threat to the established order of states and markets, communities may experience an immune response and suppressive measures from power. <a href="https://www.filmsforaction.org/watch/project-cybersyn/"><em>Project Cybersyn</em></a> in Chile is a case study to point to here. As is the general history of Western imperialism and anti-communism (containment).
+        If perceived as a threat to the established order of states and markets, communities may experience an immune response and suppressive measures from power. <a class="yellow-link" href="https://www.filmsforaction.org/watch/project-cybersyn/"><em>Project Cybersyn</em></a> in Chile is a case study to point to here. As is the general history of Western imperialism and anti-communism (containment).
       </p>
 
       <h4 class="article-subsection-title">The Problem of Parallel Civilisations</h4>
@@ -1000,6 +1005,7 @@
       var themeToggle = document.getElementById('themeToggle');
       var progressBar = document.querySelector('.progress-bar');
       var progressFill = document.getElementById('progressBarFill');
+      var yellowTeamingSection = document.getElementById('node-yellowteaming');
 
       function setFavicon(isDark) {
         var suffix = isDark ? '-dark' : '';
@@ -1087,6 +1093,11 @@
           : 0;
         progress = Math.max(0, Math.min(1, progress));
         if (progressFill) progressFill.style.height = (progress * 100) + '%';
+
+        if (progressFill && yellowTeamingSection) {
+          var inYellowTeaming = window.scrollY + window.innerHeight / 2 >= yellowTeamingSection.offsetTop;
+          progressFill.classList.toggle('is-yellow', inYellowTeaming);
+        }
 
         if (hero && (backToTop || themeToggle || progressBar)) {
           var heroBottom = hero.offsetTop + hero.offsetHeight;
