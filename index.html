@@ -173,6 +173,20 @@
     margin-bottom: 40px;
   }
 
+  .article-title em {
+    /* ET Bembo only has a 400-weight italic face. Requesting the
+       inherited 600 weight makes browsers synthesize a fake bold on
+       top of it, and that synthesis is inconsistent across engines
+       (looked fine on desktop Chrome, came out distorted/overweight
+       on mobile). Use the real italic face at its native weight and
+       forbid synthesis entirely, then fake the bolder look ourselves
+       with a small, consistent text-stroke so it still reads at
+       roughly the same weight as the rest of the title everywhere. */
+    font-weight: 400;
+    font-synthesis: none;
+    -webkit-text-stroke: 0.5px currentColor;
+  }
+
   .article-byline {
     margin-top: 10px;
     margin-bottom: 72px;
@@ -421,6 +435,27 @@
     border-radius: 999px;
     background: #16a34a;
     transition: width linear;
+  }
+
+  /* Phones in portrait specifically (not landscape, where the wider
+     viewport already pushes the clamp()s above their min bound). */
+  @media (max-width: 600px) and (orientation: portrait) {
+    .hero h1 {
+      font-size: 2.1rem;
+    }
+
+    .hero-description {
+      font-size: 1.6rem;
+    }
+
+    .article-title {
+      font-size: 2.5rem;
+    }
+
+    .article-content p,
+    .article-list {
+      font-size: 1.6rem;
+    }
   }
 </style>
 </head>
