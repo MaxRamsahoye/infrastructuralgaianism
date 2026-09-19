@@ -302,7 +302,13 @@
     width: 12px;
     height: 100%;
     background: rgba(26, 26, 23, 0.08);
+    opacity: 0;
+    transition: opacity 0.3s ease;
     z-index: 1000;
+  }
+
+  .progress-bar.is-visible {
+    opacity: 1;
   }
 
   .progress-bar-fill {
@@ -655,6 +661,7 @@
       var hero = document.querySelector('.hero');
       var backToTop = document.querySelector('.back-to-top');
       var themeToggle = document.getElementById('themeToggle');
+      var progressBar = document.querySelector('.progress-bar');
       var progressFill = document.getElementById('progressBarFill');
 
       function setFavicon(isDark) {
@@ -744,11 +751,12 @@
         progress = Math.max(0, Math.min(1, progress));
         if (progressFill) progressFill.style.height = (progress * 100) + '%';
 
-        if (hero && (backToTop || themeToggle)) {
+        if (hero && (backToTop || themeToggle || progressBar)) {
           var heroBottom = hero.offsetTop + hero.offsetHeight;
           var pastHero = window.scrollY >= heroBottom;
           if (backToTop) backToTop.classList.toggle('is-visible', pastHero);
           if (themeToggle) themeToggle.classList.toggle('is-visible', pastHero);
+          if (progressBar) progressBar.classList.toggle('is-visible', pastHero);
         }
       }
 
