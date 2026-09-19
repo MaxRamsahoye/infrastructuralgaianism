@@ -4,22 +4,26 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Infrastructural Gaianism</title>
+<link rel="icon" href="images/favicon.svg?v=2" type="image/svg+xml" id="faviconSvg">
+<link rel="icon" href="images/favicon-32.png?v=2" sizes="32x32" type="image/png" id="favicon32">
+<link rel="icon" href="images/favicon-16.png?v=2" sizes="16x16" type="image/png" id="favicon16">
+<link rel="alternate icon" href="favicon.ico?v=2" id="faviconIco">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=2">
 <script>
   // Applied synchronously, before first paint, so a stored preference
-  // never flashes the wrong theme.
+  // never flashes the wrong theme (or the wrong-colored favicon).
   (function () {
     try {
       if (localStorage.getItem('theme') === 'dark') {
         document.documentElement.classList.add('dark-theme');
+        document.getElementById('faviconSvg').href = 'images/favicon-dark.svg?v=2';
+        document.getElementById('favicon32').href = 'images/favicon-dark-32.png?v=2';
+        document.getElementById('favicon16').href = 'images/favicon-dark-16.png?v=2';
+        document.getElementById('faviconIco').href = 'favicon-dark.ico?v=2';
       }
     } catch (e) {}
   })();
 </script>
-<link rel="icon" href="images/favicon.svg?v=2" type="image/svg+xml">
-<link rel="icon" href="images/favicon-32.png?v=2" sizes="32x32" type="image/png">
-<link rel="icon" href="images/favicon-16.png?v=2" sizes="16x16" type="image/png">
-<link rel="alternate icon" href="favicon.ico?v=2">
-<link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=2">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
@@ -653,9 +657,18 @@
       var themeToggle = document.getElementById('themeToggle');
       var progressFill = document.getElementById('progressBarFill');
 
+      function setFavicon(isDark) {
+        var suffix = isDark ? '-dark' : '';
+        document.getElementById('faviconSvg').href = 'images/favicon' + suffix + '.svg?v=2';
+        document.getElementById('favicon32').href = 'images/favicon' + suffix + '-32.png?v=2';
+        document.getElementById('favicon16').href = 'images/favicon' + suffix + '-16.png?v=2';
+        document.getElementById('faviconIco').href = (isDark ? 'favicon-dark.ico' : 'favicon.ico') + '?v=2';
+      }
+
       function toggleTheme() {
         var isDark = document.documentElement.classList.toggle('dark-theme');
         if (themeToggle) themeToggle.classList.toggle('is-dark', isDark);
+        setFavicon(isDark);
         try {
           localStorage.setItem('theme', isDark ? 'dark' : 'light');
         } catch (e) {}
