@@ -408,7 +408,12 @@
     transition: stroke 0.4s ease;
   }
 
-  .loading-screen.is-complete .pentagon-triangle {
+  html.dark-theme .pentagon-triangle {
+    stroke: #ffffff;
+  }
+
+  .loading-screen.is-complete .pentagon-triangle,
+  html.dark-theme .loading-screen.is-complete .pentagon-triangle {
     stroke: #16a34a;
   }
 
