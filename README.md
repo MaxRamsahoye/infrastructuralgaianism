@@ -1,2 +1,2 @@
-# infrastructuralgainaism
-https://maxramsahoye.github.io/infrastructuralgainaism/
+# infrastructuralgaianism
+https://maxramsahoye.github.io/infrastructuralgaianism/
