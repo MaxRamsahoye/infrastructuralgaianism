@@ -1551,13 +1551,17 @@
         requestAnimationFrame(step);
       }
 
-      function scrollToArticle() {
-        if (!article) return;
-        var targetY = article.getBoundingClientRect().top + window.pageYOffset;
+      function scrollToTarget(targetEl, offset) {
+        if (!targetEl) return;
+        var targetY = targetEl.getBoundingClientRect().top + window.pageYOffset - (offset || 0);
         var distance = Math.abs(targetY - window.pageYOffset);
         // Speed factor 1.0 (duration = distance * 1.0, clamped).
         var duration = Math.min(2000, Math.max(875, distance * 1.0));
         smoothScrollTo(targetY, duration);
+      }
+
+      function scrollToArticle() {
+        scrollToTarget(article, 0);
       }
 
       if (link && article) {
@@ -1573,6 +1577,20 @@
           scrollToArticle();
         });
       }
+
+      // Section headings' own margin-top (breathing room above them)
+      // is outside their border box, so a native #anchor jump lands
+      // flush against the very top of the viewport with none of it
+      // visible. Offset by that same 64px here instead.
+      document.querySelectorAll('.mini-nav-menu a').forEach(function (menuLink) {
+        menuLink.addEventListener('click', function (e) {
+          var id = menuLink.getAttribute('href').slice(1);
+          var targetEl = document.getElementById(id);
+          if (!targetEl) return;
+          e.preventDefault();
+          scrollToTarget(targetEl, 64);
+        });
+      });
 
       if (backToTop) {
         backToTop.addEventListener('click', function (e) {
