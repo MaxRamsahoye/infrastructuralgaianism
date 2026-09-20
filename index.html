@@ -1075,6 +1075,16 @@
     .article-gallery img:first-child:nth-last-child(odd) {
       aspect-ratio: 4 / 3;
     }
+
+    /* These fixed corner elements clip into the text column at this
+       width (there's no room for both the 48px-inset UI and the
+       6vw-padded article text), so hide them entirely rather than
+       have them overlap. */
+    .mini-nav,
+    .back-to-top,
+    .theme-toggle {
+      display: none;
+    }
   }
 </style>
 </head>
