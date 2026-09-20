@@ -69,6 +69,16 @@
     transition: background-color 0.35s ease, color 0.35s ease;
   }
 
+  html {
+    /* Without this, Mobile Safari silently boosts font sizes in text
+       columns it judges "too small" for the viewport, on top of the
+       sizes set explicitly below - producing layout that doesn't match
+       what's authored/tested (and differs from Chromium, which has no
+       such behavior). */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
   ::selection {
     background: #16a34a;
     color: #ffffff;
@@ -1083,6 +1093,20 @@
   /* Phones in portrait specifically (not landscape, where the wider
      viewport already pushes the clamp()s above their min bound). */
   @media (max-width: 600px) and (orientation: portrait) {
+    .hero-content {
+      /* The desktop 40vw cap (sized to fit alongside the background
+         photo's framing on wide screens) leaves almost no room for
+         text on a narrow phone - at 375px wide that's a 150px column,
+         which wraps the title/description so tall they spill past the
+         viewport's top and bottom edges. Widen it here instead.
+         Setting width (not just max-width) matters: as a shrink-to-fit
+         flex container it was sizing to its widest unbreakable word
+         rather than filling the available space, staying narrow even
+         with more max-width to spare. */
+      width: min(680px, 85vw);
+      max-width: min(680px, 85vw);
+    }
+
     .hero h1 {
       font-size: 2.1rem;
     }
@@ -1113,15 +1137,22 @@
     .article-gallery img:first-child:nth-last-child(odd) {
       aspect-ratio: 4 / 3;
     }
+  }
 
-    /* These fixed corner elements clip into the text column at this
-       width (there's no room for both the 48px-inset UI and the
-       6vw-padded article text), so hide them entirely rather than
-       have them overlap. */
+  /* These fixed corner elements (top-left title/menu, bottom-left
+     back-to-top and theme toggle) clip into the text column on narrow
+     screens - there's no room for both the 48px-inset UI and the
+     6vw-padded article text - so hide them entirely rather than have
+     them overlap. Kept as its own width-only query (no
+     orientation/portrait qualifier, and a wider threshold than the
+     query above) so it applies in landscape too and can't be missed by
+     an orientation mismatch; !important guards against the display
+     being overridden by anything else touching these elements. */
+  @media (max-width: 680px) {
     .mini-nav,
     .back-to-top,
     .theme-toggle {
-      display: none;
+      display: none !important;
     }
   }
 </style>
