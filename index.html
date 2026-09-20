@@ -2022,12 +2022,28 @@
                 ny.push(dx / len);
               }
 
+              // Arc-length distance from the head (index n-1, next to
+              // the live dot) back to each point - a continuous,
+              // physically-grounded measure of "how far back" a point
+              // is. Using it (instead of an index-based fraction like
+              // k / (n-1), which shifts every existing point whenever
+              // one is merely added or aged out, independent of any
+              // actual cursor movement) is what keeps the ribbon
+              // moving fluidly instead of visibly stepping/jumping
+              // each frame.
+              var distFromHead = new Array(n);
+              distFromHead[n - 1] = 0;
+              for (var m = n - 2; m >= 0; m--) {
+                distFromHead[m] = distFromHead[m + 1] + Math.hypot(sx[m + 1] - sx[m], sy[m + 1] - sy[m]);
+              }
+              var totalLen = distFromHead[0] || 1;
+
               var maxHalfWidth = 3;
               var maxAlpha = 0.55;
 
               for (var k = 1; k < n; k++) {
-                var t0 = (k - 1) / (n - 1);
-                var t1 = k / (n - 1);
+                var t0 = 1 - distFromHead[k - 1] / totalLen;
+                var t1 = 1 - distFromHead[k] / totalLen;
                 var w0 = maxHalfWidth * t0;
                 var w1 = maxHalfWidth * t1;
                 var segAlpha = maxAlpha * (t0 + t1) / 2;
