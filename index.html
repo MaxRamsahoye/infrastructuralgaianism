@@ -551,6 +551,25 @@
     color: #5a5a52;
   }
 
+  .humanreasons-box {
+    /* Unlike the yellow team box, this background follows the theme
+       toggle (pale green / midnight blue), so text just uses the
+       normal var(--fg) instead of a pinned color. */
+    background: #dcedde;
+    padding: 48px 40px;
+    border-radius: 8px;
+    margin-top: 64px;
+    margin-bottom: 64px;
+  }
+
+  html.dark-theme .humanreasons-box {
+    background: #0a183d;
+  }
+
+  .humanreasons-box > .article-section-title:first-child {
+    margin-top: 0;
+  }
+
   .article-gallery {
     margin-top: 128px;
     margin-bottom: 128px;
@@ -779,8 +798,7 @@
         Throughout I include accompanying artwork to visually show the ecological civilisation that this movement seeks to realise. When compared with the sprawling urban landscape that I see around me, this art prompted the realisation that I could not spend my life within the society that I was born into, nor could I bring new life into the world (to start a family) until I had made the idyllic society it portrayed real.
       </p>
 
-      <p class="article-divider" aria-hidden="true">***</p>
-
+      <div class="humanreasons-box">
       <h3 class="article-section-title">Human Reasons for Infrastructural Gaianism beyond the Environmental</h3>
 
       <p>
@@ -790,6 +808,7 @@
       <p>
         <strong>Cities are Pathological by Emergent Design</strong>: the world&rsquo;s cities have evolved to manage complex, hierarchical social divisions of labour and instrumentalise human capital as a mechanism for generating abstract capital, not to realise human flourishing. The externalities of cities &ndash; air/noise pollution, anti-social/criminal behaviour, evolutionary mismatched infrastructure (e.g. skyscrapers, undergrounds, flats) etc &ndash; are all expected consequences of this.
       </p>
+      </div>
 
       <div class="article-gallery">
         <img src="images/fresco/fresco-1.jpg" alt="Aerial render of a circular Venus Project city, ringed by canals and solar-roofed residential blocks around a central plaza.">
@@ -1124,14 +1143,19 @@
         requestAnimationFrame(step);
       }
 
+      function scrollToArticle() {
+        if (!article) return;
+        var targetY = article.getBoundingClientRect().top + window.pageYOffset;
+        var distance = Math.abs(targetY - window.pageYOffset);
+        // Speed factor 1.0 (duration = distance * 1.0, clamped).
+        var duration = Math.min(2000, Math.max(875, distance * 1.0));
+        smoothScrollTo(targetY, duration);
+      }
+
       if (link && article) {
         link.addEventListener('click', function (e) {
           e.preventDefault();
-          var targetY = article.getBoundingClientRect().top + window.pageYOffset;
-          var distance = Math.abs(targetY - window.pageYOffset);
-          // Speed factor 1.0 (duration = distance * 1.0, clamped).
-          var duration = Math.min(2000, Math.max(875, distance * 1.0));
-          smoothScrollTo(targetY, duration);
+          scrollToArticle();
         });
       }
 
@@ -1152,6 +1176,12 @@
           e.preventDefault();
           toggleTheme();
         } else if (key === 'u') {
+          e.preventDefault();
+          scrollToTop();
+        } else if (key === 'enter') {
+          e.preventDefault();
+          scrollToArticle();
+        } else if (key === 'backspace') {
           e.preventDefault();
           scrollToTop();
         }
