@@ -69,10 +69,37 @@
     transition: background-color 0.35s ease, color 0.35s ease;
   }
 
+  ::selection {
+    background: #16a34a;
+    color: #ffffff;
+  }
+
+  ::-moz-selection {
+    background: #16a34a;
+    color: #ffffff;
+  }
+
   * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+  }
+
+  /* Only applied via JS, and only for fine-pointer devices that don't
+     prefer reduced motion (see the cursor-trail script) - touch and
+     reduced-motion visitors keep the native cursor. */
+  html.custom-cursor,
+  html.custom-cursor * {
+    cursor: none !important;
+  }
+
+  #cursorTrail {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 99999;
   }
 
   html, body {
@@ -1139,6 +1166,88 @@
       window.addEventListener('scroll', onScroll, { passive: true });
       window.addEventListener('resize', onScroll);
       onScroll();
+    })();
+  </script>
+  <script>
+    // Custom cursor: a dot with a fading, fully-connected trail behind
+    // it, tracing recent motion. Skipped on touch devices (no real
+    // cursor to replace) and when reduced motion is preferred.
+    (function () {
+      if (!window.matchMedia('(pointer: fine)').matches) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      document.documentElement.classList.add('custom-cursor');
+
+      var canvas = document.createElement('canvas');
+      canvas.id = 'cursorTrail';
+      canvas.setAttribute('aria-hidden', 'true');
+      document.body.appendChild(canvas);
+      var ctx = canvas.getContext('2d');
+
+      var dpr = window.devicePixelRatio || 1;
+      function resize() {
+        dpr = window.devicePixelRatio || 1;
+        canvas.width = window.innerWidth * dpr;
+        canvas.height = window.innerHeight * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      var points = [];
+      var trailMs = 320;
+      var mouseX = 0, mouseY = 0;
+      var hasMouse = false;
+
+      window.addEventListener('mousemove', function (e) {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        hasMouse = true;
+        points.push({ x: mouseX, y: mouseY, t: performance.now() });
+      }, { passive: true });
+
+      document.addEventListener('mouseleave', function () {
+        hasMouse = false;
+      });
+      document.addEventListener('mouseenter', function () {
+        hasMouse = true;
+      });
+
+      var accentRGB = '22, 163, 74';
+
+      function draw() {
+        var now = performance.now();
+        while (points.length && now - points[0].t > trailMs) points.shift();
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        if (hasMouse) {
+          var rgb = accentRGB;
+
+          for (var i = 1; i < points.length; i++) {
+            var p0 = points[i - 1];
+            var p1 = points[i];
+            var age = (now - p1.t) / trailMs;
+            var strength = Math.max(0, 1 - age);
+            ctx.beginPath();
+            ctx.moveTo(p0.x, p0.y);
+            ctx.lineTo(p1.x, p1.y);
+            ctx.strokeStyle = 'rgba(' + rgb + ', ' + (strength * 0.55) + ')';
+            ctx.lineWidth = Math.max(0.6, strength * 3);
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.stroke();
+          }
+
+          ctx.beginPath();
+          ctx.arc(mouseX, mouseY, 4.5, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgb(' + rgb + ')';
+          ctx.fill();
+        }
+
+        requestAnimationFrame(draw);
+      }
+      requestAnimationFrame(draw);
     })();
   </script>
 </body>
