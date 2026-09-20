@@ -480,6 +480,18 @@
     color: #eab308;
   }
 
+  /* Dark mode: this icon sits directly over the section's own bright
+     #eed202 fill once scrolled there, same issue as .mini-nav - the
+     usual near-white rest color and the yellow hover accent above
+     both disappear against it. */
+  html.dark-theme.in-yellow-section .back-to-top {
+    color: #1a1a17;
+  }
+
+  html.dark-theme.in-yellow-section .back-to-top:hover {
+    color: #ffffff;
+  }
+
   .back-to-top svg {
     width: 22px;
     height: 22px;
@@ -520,6 +532,14 @@
 
   html.in-yellow-section .theme-toggle:hover {
     color: #eab308;
+  }
+
+  html.dark-theme.in-yellow-section .theme-toggle {
+    color: #1a1a17;
+  }
+
+  html.dark-theme.in-yellow-section .theme-toggle:hover {
+    color: #ffffff;
   }
 
   .theme-toggle svg {
