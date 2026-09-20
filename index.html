@@ -345,8 +345,7 @@
   }
 
   html.dark-theme .article-content p.article-quote-highlight {
-    background: #767600;
-    color: #ffffff;
+    background: #eed202;
   }
 
   .article-content p.article-quote-attribution {
@@ -701,8 +700,9 @@
   .yellowteaming-box {
     /* Pale yellow section wash, lighter than the quote's own fill
        (#fff2cc) so the quote still reads as its own highlighted card
-       within the section. In dark mode this swaps to a vivid gold
-       (below) so it can carry white text instead. */
+       within the section. Dark mode uses its own bright yellow
+       (below) but keeps this same dark text - both fills are light
+       enough to need it. */
     background: #fdf6e3;
     color: #1a1a17;
     /* Extra yellow breathing room above the heading and (since this is
@@ -716,29 +716,11 @@
   }
 
   html.dark-theme .yellowteaming-box {
-    /* True yellow hue (equal R/G, no blue) rather than the amber/gold
-       #a16207 previously used here, which read as orange. */
-    background: #767600;
-    color: #ffffff;
+    background: #eed202;
   }
 
   .article-content .yellowteaming-box p.article-quote-attribution {
     color: #5a5a52;
-  }
-
-  html.dark-theme .article-content .yellowteaming-box p.article-quote-attribution {
-    color: rgba(255, 255, 255, 0.82);
-  }
-
-  html.dark-theme .yellowteaming-box a.yellow-link {
-    /* #eab308 (the usual yellow-link color) doesn't have enough
-       contrast against this box's own vivid gold background. */
-    color: #fffbeb;
-    border-bottom-color: rgba(255, 251, 235, 0.5);
-  }
-
-  html.dark-theme .yellowteaming-box a.yellow-link:hover {
-    border-bottom-color: #fffbeb;
   }
 
   .humanreasons-box {
