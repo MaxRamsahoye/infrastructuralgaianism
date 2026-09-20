@@ -1980,22 +1980,67 @@
               startIndex--;
             }
 
-            for (var i = Math.max(1, startIndex); i < points.length; i++) {
-              var p0 = points[i - 1];
-              var p1 = points[i];
-              var age = (now - p1.t) / trailMs;
-              var strength = Math.max(0, 1 - age);
-              ctx.beginPath();
-              ctx.moveTo(p0.x, p0.y);
-              ctx.lineTo(p1.x, p1.y);
-              ctx.strokeStyle = 'rgba(' + rgb + ', ' + (strength * 0.55) + ')';
-              ctx.lineWidth = Math.max(1.5, strength * 6);
-              // Flat (not round) caps: each segment is stroked as its
-              // own path with a different width/opacity, and round
-              // caps at every joint between them showed up as a row
-              // of little dots along the trail.
-              ctx.lineCap = 'butt';
-              ctx.stroke();
+            // Drawn as a single tapered ribbon (ordered tail -> head)
+            // rather than independently-stroked segments: width and
+            // opacity are both graded by position along the ribbon
+            // (0 at the tail, full at the head next to the dot), so
+            // it always comes to a point and fades smoothly back to
+            // front - regardless of how fast the mouse is moving,
+            // unlike the old per-segment time-based age, which made
+            // every point look equally "fresh" during a fast swipe
+            // and then have the whole trail fade together at once.
+            var trail = points.slice(Math.max(0, startIndex));
+            var n = trail.length;
+
+            if (n >= 2) {
+              // Light moving-average smoothing so sparse points from
+              // a fast, sudden mouse movement don't read as a sharp
+              // zig-zag; the live cursor position stays pinned exactly.
+              var sx = [], sy = [];
+              for (var i = 0; i < n; i++) {
+                var a = trail[Math.max(0, i - 1)];
+                var b = trail[i];
+                var c = trail[Math.min(n - 1, i + 1)];
+                sx.push((a.x + b.x * 2 + c.x) / 4);
+                sy.push((a.y + b.y * 2 + c.y) / 4);
+              }
+              sx[n - 1] = trail[n - 1].x;
+              sy[n - 1] = trail[n - 1].y;
+
+              var nx = [], ny = [];
+              for (var j = 0; j < n; j++) {
+                var dx, dy;
+                if (j === 0) {
+                  dx = sx[1] - sx[0]; dy = sy[1] - sy[0];
+                } else if (j === n - 1) {
+                  dx = sx[j] - sx[j - 1]; dy = sy[j] - sy[j - 1];
+                } else {
+                  dx = sx[j + 1] - sx[j - 1]; dy = sy[j + 1] - sy[j - 1];
+                }
+                var len = Math.hypot(dx, dy) || 1;
+                nx.push(-dy / len);
+                ny.push(dx / len);
+              }
+
+              var maxHalfWidth = 3;
+              var maxAlpha = 0.55;
+
+              for (var k = 1; k < n; k++) {
+                var t0 = (k - 1) / (n - 1);
+                var t1 = k / (n - 1);
+                var w0 = maxHalfWidth * t0;
+                var w1 = maxHalfWidth * t1;
+                var segAlpha = maxAlpha * (t0 + t1) / 2;
+
+                ctx.beginPath();
+                ctx.moveTo(sx[k - 1] + nx[k - 1] * w0, sy[k - 1] + ny[k - 1] * w0);
+                ctx.lineTo(sx[k] + nx[k] * w1, sy[k] + ny[k] * w1);
+                ctx.lineTo(sx[k] - nx[k] * w1, sy[k] - ny[k] * w1);
+                ctx.lineTo(sx[k - 1] - nx[k - 1] * w0, sy[k - 1] - ny[k - 1] * w0);
+                ctx.closePath();
+                ctx.fillStyle = 'rgba(' + rgb + ', ' + segAlpha + ')';
+                ctx.fill();
+              }
             }
 
             ctx.beginPath();
