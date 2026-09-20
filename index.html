@@ -1080,6 +1080,9 @@
         var lastDelay = (triangles.length - 1) * 150;
         var drawTime = reduceMotion ? 0 : (lastDelay + 400);
         var totalTime = drawTime + 350;
+        // Read by the cursor-trail script (a separate <script> block,
+        // so it can't see this function's local totalTime directly).
+        window.__loadingScreenTotalTime = totalTime;
 
         if (loadingProgressFill) {
           if (reduceMotion) {
@@ -1239,91 +1242,97 @@
       if (!window.matchMedia('(pointer: fine)').matches) return;
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-      document.documentElement.classList.add('custom-cursor');
+      // Wait until a second after the loading screen has finished
+      // before turning the custom cursor on.
+      setTimeout(initCursor, (window.__loadingScreenTotalTime || 0) + 1000);
 
-      var canvas = document.createElement('canvas');
-      canvas.id = 'cursorTrail';
-      canvas.setAttribute('aria-hidden', 'true');
-      document.body.appendChild(canvas);
-      var ctx = canvas.getContext('2d');
+      function initCursor() {
+        document.documentElement.classList.add('custom-cursor');
 
-      var dpr = window.devicePixelRatio || 1;
-      function resize() {
-        dpr = window.devicePixelRatio || 1;
-        canvas.width = window.innerWidth * dpr;
-        canvas.height = window.innerHeight * dpr;
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      }
-      resize();
-      window.addEventListener('resize', resize);
+        var canvas = document.createElement('canvas');
+        canvas.id = 'cursorTrail';
+        canvas.setAttribute('aria-hidden', 'true');
+        document.body.appendChild(canvas);
+        var ctx = canvas.getContext('2d');
 
-      var points = [];
-      var trailMs = 550;
-      // Caps how far back the trail visually reaches, independent of
-      // trailMs (fade duration) - without this, fast mouse movement
-      // over the now-longer fade window would draw a long trail.
-      var maxTrailLength = 70;
-      var mouseX = 0, mouseY = 0;
-      var hasMouse = false;
-
-      window.addEventListener('mousemove', function (e) {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-        hasMouse = true;
-        points.push({ x: mouseX, y: mouseY, t: performance.now() });
-      }, { passive: true });
-
-      document.addEventListener('mouseleave', function () {
-        hasMouse = false;
-      });
-      document.addEventListener('mouseenter', function () {
-        hasMouse = true;
-      });
-
-      var accentRGB = '22, 163, 74';
-
-      function draw() {
-        var now = performance.now();
-        while (points.length && now - points[0].t > trailMs) points.shift();
-
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        if (hasMouse) {
-          var rgb = accentRGB;
-
-          var startIndex = points.length - 1;
-          var dist = 0;
-          while (startIndex > 0 && dist < maxTrailLength) {
-            var a = points[startIndex - 1];
-            var b = points[startIndex];
-            dist += Math.hypot(b.x - a.x, b.y - a.y);
-            startIndex--;
-          }
-
-          for (var i = Math.max(1, startIndex); i < points.length; i++) {
-            var p0 = points[i - 1];
-            var p1 = points[i];
-            var age = (now - p1.t) / trailMs;
-            var strength = Math.max(0, 1 - age);
-            ctx.beginPath();
-            ctx.moveTo(p0.x, p0.y);
-            ctx.lineTo(p1.x, p1.y);
-            ctx.strokeStyle = 'rgba(' + rgb + ', ' + (strength * 0.55) + ')';
-            ctx.lineWidth = Math.max(1.5, strength * 6);
-            ctx.lineCap = 'round';
-            ctx.lineJoin = 'round';
-            ctx.stroke();
-          }
-
-          ctx.beginPath();
-          ctx.arc(mouseX, mouseY, 4.5, 0, Math.PI * 2);
-          ctx.fillStyle = 'rgb(' + rgb + ')';
-          ctx.fill();
+        var dpr = window.devicePixelRatio || 1;
+        function resize() {
+          dpr = window.devicePixelRatio || 1;
+          canvas.width = window.innerWidth * dpr;
+          canvas.height = window.innerHeight * dpr;
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         }
+        resize();
+        window.addEventListener('resize', resize);
 
+        var points = [];
+        var trailMs = 550;
+        // Caps how far back the trail visually reaches, independent of
+        // trailMs (fade duration) - without this, fast mouse movement
+        // over the now-longer fade window would draw a long trail.
+        var maxTrailLength = 70;
+        var mouseX = 0, mouseY = 0;
+        var hasMouse = false;
+
+        window.addEventListener('mousemove', function (e) {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+          hasMouse = true;
+          points.push({ x: mouseX, y: mouseY, t: performance.now() });
+        }, { passive: true });
+
+        document.addEventListener('mouseleave', function () {
+          hasMouse = false;
+        });
+        document.addEventListener('mouseenter', function () {
+          hasMouse = true;
+        });
+
+        var accentRGB = '22, 163, 74';
+
+        function draw() {
+          var now = performance.now();
+          while (points.length && now - points[0].t > trailMs) points.shift();
+
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+          if (hasMouse) {
+            var rgb = accentRGB;
+
+            var startIndex = points.length - 1;
+            var dist = 0;
+            while (startIndex > 0 && dist < maxTrailLength) {
+              var a = points[startIndex - 1];
+              var b = points[startIndex];
+              dist += Math.hypot(b.x - a.x, b.y - a.y);
+              startIndex--;
+            }
+
+            for (var i = Math.max(1, startIndex); i < points.length; i++) {
+              var p0 = points[i - 1];
+              var p1 = points[i];
+              var age = (now - p1.t) / trailMs;
+              var strength = Math.max(0, 1 - age);
+              ctx.beginPath();
+              ctx.moveTo(p0.x, p0.y);
+              ctx.lineTo(p1.x, p1.y);
+              ctx.strokeStyle = 'rgba(' + rgb + ', ' + (strength * 0.55) + ')';
+              ctx.lineWidth = Math.max(1.5, strength * 6);
+              ctx.lineCap = 'round';
+              ctx.lineJoin = 'round';
+              ctx.stroke();
+            }
+
+            ctx.beginPath();
+            ctx.arc(mouseX, mouseY, 4.5, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgb(' + rgb + ')';
+            ctx.fill();
+          }
+
+          requestAnimationFrame(draw);
+        }
         requestAnimationFrame(draw);
       }
-      requestAnimationFrame(draw);
     })();
   </script>
 </body>
