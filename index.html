@@ -1105,6 +1105,16 @@
          with more max-width to spare. */
       width: min(680px, 85vw);
       max-width: min(680px, 85vw);
+      /* The desktop top:30.5% anchors the text near the image's cloud
+         band, but it puts the vertical center in the upper third of
+         the hero box - fine when 100vh is the actual visible height,
+         but some in-app browsers (e.g. LinkedIn's) overlay their own
+         persistent header/footer chrome on top of a 100vh block
+         without shrinking it to match, eating into both edges and
+         clipping text that isn't centered with equal slack on both
+         sides. True-center on mobile so there's as much margin above
+         as below. */
+      top: 50%;
     }
 
     .hero h1 {
@@ -1112,7 +1122,11 @@
     }
 
     .hero-description {
-      font-size: 1.6rem;
+      font-size: 1.45rem;
+    }
+
+    .scroll-arrow {
+      margin-top: 2em;
     }
 
     .article-title {
