@@ -2045,6 +2045,24 @@
               }
               var totalLen = distFromHead[0] || 1;
 
+              // Each point's own age also fades it, on top of its
+              // position - not instead of it. Position alone gives
+              // the head-to-tail gradient while the cursor is moving
+              // (all points are recent then, so age alone wouldn't
+              // vary across them). Age alone is what makes a
+              // *stationary* trail recede smoothly: without it, every
+              // currently-visible point tends to have been recorded
+              // within the same short recent burst, so its
+              // (position-based) opacity would hold roughly steady
+              // and then the whole trail would expire together the
+              // moment those points cross trailMs - a sudden-looking
+              // cut instead of a fade. Taking whichever of the two is
+              // more faded covers both cases.
+              var pointAgeAlpha = new Array(n);
+              for (var p = 0; p < n; p++) {
+                pointAgeAlpha[p] = Math.max(0, 1 - (now - trail[p].t) / trailMs);
+              }
+
               var maxHalfWidth = 3;
               var maxAlpha = 0.55;
 
@@ -2053,7 +2071,9 @@
                 var t1 = 1 - distFromHead[k] / totalLen;
                 var w0 = maxHalfWidth * t0;
                 var w1 = maxHalfWidth * t1;
-                var segAlpha = maxAlpha * (t0 + t1) / 2;
+                var fade0 = Math.min(t0, pointAgeAlpha[k - 1]);
+                var fade1 = Math.min(t1, pointAgeAlpha[k]);
+                var segAlpha = maxAlpha * (fade0 + fade1) / 2;
 
                 ctx.beginPath();
                 ctx.moveTo(sx[k - 1] + nx[k - 1] * w0, sy[k - 1] + ny[k - 1] * w0);
