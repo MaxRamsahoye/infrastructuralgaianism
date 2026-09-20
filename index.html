@@ -602,6 +602,10 @@
        doesn't follow the light/dark toggle. */
     background: #fdf6e3;
     color: #1a1a17;
+    /* Extra yellow breathing room above the heading and (since this is
+       the last section on the page) below the final paragraph. */
+    padding-top: 112px;
+    padding-bottom: 128px;
     /* The last section on the page: cancel out .article's own
        padding-bottom (3rem) so this fill reaches the literal bottom
        of the page instead of leaving a page-background bar under it. */
@@ -1375,8 +1379,11 @@
               ctx.lineTo(p1.x, p1.y);
               ctx.strokeStyle = 'rgba(' + rgb + ', ' + (strength * 0.55) + ')';
               ctx.lineWidth = Math.max(1.5, strength * 6);
-              ctx.lineCap = 'round';
-              ctx.lineJoin = 'round';
+              // Flat (not round) caps: each segment is stroked as its
+              // own path with a different width/opacity, and round
+              // caps at every joint between them showed up as a row
+              // of little dots along the trail.
+              ctx.lineCap = 'butt';
               ctx.stroke();
             }
 
