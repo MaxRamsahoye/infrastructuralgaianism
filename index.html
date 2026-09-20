@@ -662,6 +662,22 @@
     color: #eab308;
   }
 
+  /* In dark mode, the Yellow Teaming section's own fill (#eed202, a
+     bright yellow) sits directly behind this fixed corner menu once
+     scrolled there - the theme's usual white-ish text and the yellow
+     hover accent above both disappear against it, so both get
+     overridden back to a light-on-dark-friendly black/white pair
+     instead while in that section. */
+  html.dark-theme.in-yellow-section .mini-title,
+  html.dark-theme.in-yellow-section .mini-nav-menu a {
+    color: #1a1a17;
+  }
+
+  html.dark-theme.in-yellow-section .mini-title:hover,
+  html.dark-theme.in-yellow-section .mini-nav-menu a:hover {
+    color: #ffffff;
+  }
+
   .article-content p.article-divider {
     margin-top: 80px;
     text-align: center;
@@ -1316,10 +1332,10 @@
 
       <div class="section-band yellowteaming-box">
       <div class="section-band-inner">
-      <h3 class="article-section-title" id="node-yellowteaming"><a class="yellow-link" href="https://consilienceproject.org/development-in-progress/#:~:text=yellow%20teaming.-,Yellow%20Teaming,such%20issues%20in%20advance%2C%20thereby%20minimizing%20the%20risk%20of%20negative%20externalities.,-The%20practice%20of"><em>Yellow Teaming</em></a>: Accounting for Potential Problems</h3>
+      <h3 class="article-section-title" id="node-yellowteaming"><em>Yellow Teaming</em>: Accounting for Potential Problems</h3>
 
       <p class="article-quote article-quote-highlight">
-        &ldquo;The &lsquo;yellow team&rsquo; concept takes this idea in another direction, assessing a project and its implementation in the context of all other aspects of reality that it will touch over the full course of its lifetime. Where red teaming attempts to assure that a plan doesn&rsquo;t fail, <em>yellow teaming</em> attempts to ensure it doesn&rsquo;t cause unexpected harms or problems elsewhere. It aims to account for how our typical approaches to solution design tend to make problems worse in the long run, and provide guidance to address such issues in advance, thereby minimizing the risk of negative externalities.&rdquo;
+        &ldquo;The &lsquo;<a class="yellow-link" href="https://consilienceproject.org/development-in-progress/#:~:text=yellow%20teaming.-,Yellow%20Teaming,such%20issues%20in%20advance%2C%20thereby%20minimizing%20the%20risk%20of%20negative%20externalities.,-The%20practice%20of">yellow team</a>&rsquo; concept takes this idea in another direction, assessing a project and its implementation in the context of all other aspects of reality that it will touch over the full course of its lifetime. Where red teaming attempts to assure that a plan doesn&rsquo;t fail, <em>yellow teaming</em> attempts to ensure it doesn&rsquo;t cause unexpected harms or problems elsewhere. It aims to account for how our typical approaches to solution design tend to make problems worse in the long run, and provide guidance to address such issues in advance, thereby minimizing the risk of negative externalities.&rdquo;
       </p>
 
       <p class="article-quote-attribution">
