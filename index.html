@@ -105,6 +105,10 @@
   html, body {
     background: var(--bg);
     color: var(--fg);
+    /* .section-band uses the 100vw/-50vw full-bleed trick to break out
+       of .article-content's column; guard against the sub-pixel
+       horizontal scrollbar that trick can introduce. */
+    overflow-x: hidden;
   }
 
   .hero {
@@ -530,6 +534,31 @@
     color: #16a34a;
   }
 
+  /* Full-bleed section band: breaks out of .article-content's 760px
+     column to span the full viewport width, while .section-band-inner
+     mirrors .article's own width/padding math (100% width, 6vw
+     horizontal padding, box-sizing: border-box) plus .article-content's
+     max-width/centering, so the text inside lines up exactly with the
+     surrounding paragraphs at every viewport width. */
+  .section-band {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    margin-left: -50vw;
+    padding: 64px 6vw;
+    margin-top: 64px;
+    margin-bottom: 64px;
+  }
+
+  .section-band-inner {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .section-band-inner > .article-section-title:first-child {
+    margin-top: 0;
+  }
+
   .yellowteaming-box {
     /* Pale yellow section wash, lighter than the quote's own fill
        (#fff2cc) so the quote still reads as its own highlighted card
@@ -538,13 +567,6 @@
        doesn't follow the light/dark toggle. */
     background: #fdf6e3;
     color: #1a1a17;
-    padding: 48px 40px;
-    border-radius: 8px;
-    margin-top: 40px;
-  }
-
-  .yellowteaming-box > .article-section-title:first-child {
-    margin-top: 0;
   }
 
   .article-content .yellowteaming-box p.article-quote-attribution {
@@ -556,18 +578,10 @@
        toggle (pale green / midnight blue), so text just uses the
        normal var(--fg) instead of a pinned color. */
     background: #dcedde;
-    padding: 48px 40px;
-    border-radius: 8px;
-    margin-top: 64px;
-    margin-bottom: 64px;
   }
 
   html.dark-theme .humanreasons-box {
     background: #0a183d;
-  }
-
-  .humanreasons-box > .article-section-title:first-child {
-    margin-top: 0;
   }
 
   .article-gallery {
@@ -798,7 +812,8 @@
         Throughout I include accompanying artwork to visually show the ecological civilisation that this movement seeks to realise. When compared with the sprawling urban landscape that I see around me, this art prompted the realisation that I could not spend my life within the society that I was born into, nor could I bring new life into the world (to start a family) until I had made the idyllic society it portrayed real.
       </p>
 
-      <div class="humanreasons-box">
+      <div class="section-band humanreasons-box">
+      <div class="section-band-inner">
       <h3 class="article-section-title">Human Reasons for Infrastructural Gaianism beyond the Environmental</h3>
 
       <p>
@@ -808,6 +823,7 @@
       <p>
         <strong>Cities are Pathological by Emergent Design</strong>: the world&rsquo;s cities have evolved to manage complex, hierarchical social divisions of labour and instrumentalise human capital as a mechanism for generating abstract capital, not to realise human flourishing. The externalities of cities &ndash; air/noise pollution, anti-social/criminal behaviour, evolutionary mismatched infrastructure (e.g. skyscrapers, undergrounds, flats) etc &ndash; are all expected consequences of this.
       </p>
+      </div>
       </div>
 
       <div class="article-gallery">
@@ -994,9 +1010,8 @@
         Unlike <em>ReGen</em> and <em>Neos</em>, <em>OneCommunity</em> is defined by an open-source and (insofar as it is possible) non-commercial approach. Like the other projects it has a high cost: &lsquo;One Community is seeking between $20 million to $30 million in grants&hellip; for the purchase of land, startup costs, and the first two phases of the construction project for creating the example villages&rsquo;.
       </p>
 
-      <p class="article-divider" aria-hidden="true">***</p>
-
-      <div class="yellowteaming-box">
+      <div class="section-band yellowteaming-box">
+      <div class="section-band-inner">
       <h3 class="article-section-title" id="node-yellowteaming"><a class="yellow-link" href="https://consilienceproject.org/development-in-progress/#:~:text=yellow%20teaming.-,Yellow%20Teaming,such%20issues%20in%20advance%2C%20thereby%20minimizing%20the%20risk%20of%20negative%20externalities.,-The%20practice%20of"><em>Yellow Teaming</em></a>: Accounting for Potential Problems</h3>
 
       <p class="article-quote article-quote-highlight">
@@ -1035,8 +1050,7 @@
         It doesn&rsquo;t ultimately matter if there is a decentralised network of eco-cities &ndash; even if half the world transitions to this &ndash; if the old civilisation keeps on running and fucks everything up, likely by engaging in power competition with the new civilisation (to the point above).
       </p>
       </div>
-
-      <p class="article-divider" aria-hidden="true">***</p>
+      </div>
     </div>
   </section>
 
@@ -1244,7 +1258,11 @@
       window.addEventListener('resize', resize);
 
       var points = [];
-      var trailMs = 320;
+      var trailMs = 550;
+      // Caps how far back the trail visually reaches, independent of
+      // trailMs (fade duration) - without this, fast mouse movement
+      // over the now-longer fade window would draw a long trail.
+      var maxTrailLength = 70;
       var mouseX = 0, mouseY = 0;
       var hasMouse = false;
 
@@ -1273,7 +1291,16 @@
         if (hasMouse) {
           var rgb = accentRGB;
 
-          for (var i = 1; i < points.length; i++) {
+          var startIndex = points.length - 1;
+          var dist = 0;
+          while (startIndex > 0 && dist < maxTrailLength) {
+            var a = points[startIndex - 1];
+            var b = points[startIndex];
+            dist += Math.hypot(b.x - a.x, b.y - a.y);
+            startIndex--;
+          }
+
+          for (var i = Math.max(1, startIndex); i < points.length; i++) {
             var p0 = points[i - 1];
             var p1 = points[i];
             var age = (now - p1.t) / trailMs;
@@ -1282,7 +1309,7 @@
             ctx.moveTo(p0.x, p0.y);
             ctx.lineTo(p1.x, p1.y);
             ctx.strokeStyle = 'rgba(' + rgb + ', ' + (strength * 0.55) + ')';
-            ctx.lineWidth = Math.max(0.6, strength * 3);
+            ctx.lineWidth = Math.max(1.5, strength * 6);
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
             ctx.stroke();
