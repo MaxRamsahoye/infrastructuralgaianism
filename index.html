@@ -329,13 +329,11 @@
   }
 
   .article-content p.article-quote-highlight {
-    /* Matches .yellowteaming-box's own background so the quote reads
-       as part of the section wash rather than a separately-colored
-       card within it. Text color is pinned regardless of theme, same
-       reasoning as the hero text: this fill is fixed, not
-       theme-following. Wider than a plain .article-quote (0 right
-       margin instead of 120px) since it's a section-level highlight,
-       not an indented inline quotation. */
+    /* Matches .yellowteaming-box's own background (light and dark) so
+       the quote reads as part of the section wash rather than a
+       separately-colored card within it. Wider than a plain
+       .article-quote (0 right margin instead of 120px) since it's a
+       section-level highlight, not an indented inline quotation. */
     background: #fdf6e3;
     color: #1a1a17;
     padding: 20px 24px;
@@ -344,6 +342,11 @@
     margin-top: 40px;
     margin-right: 0;
     margin-bottom: 24px;
+  }
+
+  html.dark-theme .article-content p.article-quote-highlight {
+    background: #a16207;
+    color: #ffffff;
   }
 
   .article-content p.article-quote-attribution {
@@ -525,6 +528,16 @@
     display: none;
   }
 
+  /* Hudless mode ('h' shortcut): hides the icon buttons and progress
+     bar for a distraction-free view, overriding their own
+     scroll-driven is-visible state. */
+  html.hudless .back-to-top,
+  html.hudless .theme-toggle,
+  html.hudless .progress-bar {
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
   .theme-toggle.is-dark .icon-sun {
     display: block;
   }
@@ -671,9 +684,8 @@
   .yellowteaming-box {
     /* Pale yellow section wash, lighter than the quote's own fill
        (#fff2cc) so the quote still reads as its own highlighted card
-       within the section. Text color is pinned regardless of theme -
-       same reasoning as the hero text and the quote box: this fill
-       doesn't follow the light/dark toggle. */
+       within the section. In dark mode this swaps to a vivid gold
+       (below) so it can carry white text instead. */
     background: #fdf6e3;
     color: #1a1a17;
     /* Extra yellow breathing room above the heading and (since this is
@@ -686,16 +698,40 @@
     margin-bottom: -3rem;
   }
 
+  html.dark-theme .yellowteaming-box {
+    background: #a16207;
+    color: #ffffff;
+  }
+
   .article-content .yellowteaming-box p.article-quote-attribution {
     color: #5a5a52;
   }
 
+  html.dark-theme .article-content .yellowteaming-box p.article-quote-attribution {
+    color: rgba(255, 255, 255, 0.82);
+  }
+
+  html.dark-theme .yellowteaming-box a.yellow-link {
+    /* #eab308 (the usual yellow-link color) doesn't have enough
+       contrast against this box's own vivid gold background. */
+    color: #fffbeb;
+    border-bottom-color: rgba(255, 251, 235, 0.5);
+  }
+
+  html.dark-theme .yellowteaming-box a.yellow-link:hover {
+    border-bottom-color: #fffbeb;
+  }
+
   .humanreasons-box {
-    /* Pale green wash, pinned regardless of theme (same reasoning as
-       the yellow team box) so it stays the same green in dark mode
-       instead of swapping to a dark fill. */
+    /* Pale green wash. In dark mode this swaps to a vivid green
+       (below) so it can carry white text instead. */
     background: #dcedde;
     color: #1a1a17;
+  }
+
+  html.dark-theme .humanreasons-box {
+    background: #15803d;
+    color: #ffffff;
   }
 
   .article-gallery {
@@ -713,6 +749,12 @@
     aspect-ratio: 4 / 3;
     object-fit: cover;
     border-radius: 6px;
+    cursor: zoom-in;
+    transition: filter 0.2s ease;
+  }
+
+  .article-gallery img:hover {
+    filter: brightness(0.94);
   }
 
   /* When the gallery has an odd number of images, the first one (which
@@ -721,6 +763,153 @@
   .article-gallery img:first-child:nth-last-child(odd) {
     grid-column: 1 / -1;
     aspect-ratio: 21 / 9;
+  }
+
+  /* Gallery lightbox: full-screen viewer opened by clicking any
+     .article-gallery image. Background follows the theme (var(--bg)),
+     same as the loading screen, giving the "blank white/black screen"
+     requested. */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 4000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+
+  .lightbox.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  html.lightbox-open,
+  html.lightbox-open body {
+    overflow: hidden;
+  }
+
+  .lightbox-main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 0;
+    padding: 96px 96px 24px;
+  }
+
+  .lightbox-image {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 6px;
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.25);
+  }
+
+  .lightbox-close,
+  .lightbox-arrow {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: var(--fg);
+    transition: color 0.2s ease;
+  }
+
+  .lightbox-close:hover,
+  .lightbox-arrow:hover {
+    color: #16a34a;
+  }
+
+  .lightbox-close svg,
+  .lightbox-arrow svg {
+    width: 26px;
+    height: 26px;
+    display: block;
+  }
+
+  .lightbox-close {
+    top: 32px;
+    right: 32px;
+    z-index: 1;
+  }
+
+  .lightbox-arrow {
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+  }
+
+  .lightbox-prev {
+    left: 32px;
+  }
+
+  .lightbox-next {
+    right: 32px;
+  }
+
+  .lightbox-carousel {
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 100vw;
+    box-sizing: border-box;
+    padding: 0 32px 32px;
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+
+  .lightbox-thumb {
+    flex: 0 0 auto;
+    height: 72px;
+    width: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 4px;
+    cursor: pointer;
+    opacity: 0.45;
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    transition: opacity 0.2s ease, outline-color 0.2s ease;
+  }
+
+  .lightbox-thumb:hover {
+    opacity: 0.75;
+  }
+
+  .lightbox-thumb.is-active {
+    opacity: 1;
+    outline-color: #16a34a;
+  }
+
+  @media (max-width: 700px) {
+    .lightbox-main {
+      padding: 72px 24px 16px;
+    }
+
+    .lightbox-close {
+      top: 16px;
+      right: 16px;
+    }
+
+    .lightbox-prev {
+      left: 8px;
+    }
+
+    .lightbox-next {
+      right: 8px;
+    }
   }
 
   html.is-loading,
@@ -1198,6 +1387,28 @@
     </svg>
   </button>
 
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Close gallery view">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M5 5 L19 19 M19 5 L5 19" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <button type="button" class="lightbox-arrow lightbox-prev" id="lightboxPrev" aria-label="Previous image">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M15 4 L7 12 L15 20" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <button type="button" class="lightbox-arrow lightbox-next" id="lightboxNext" aria-label="Next image">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9 4 L17 12 L9 20" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="lightbox-main">
+      <img class="lightbox-image" id="lightboxImage" src="" alt="">
+    </div>
+    <div class="lightbox-carousel" id="lightboxCarousel"></div>
+  </div>
+
   <script>
     (function () {
       var loadingScreen = document.getElementById('loadingScreen');
@@ -1325,6 +1536,7 @@
         if (e.ctrlKey || e.metaKey || e.altKey) return;
         var tag = (e.target && e.target.tagName) || '';
         if (tag === 'INPUT' || tag === 'TEXTAREA' || (e.target && e.target.isContentEditable)) return;
+        if (document.documentElement.classList.contains('lightbox-open')) return;
 
         var key = e.key.toLowerCase();
         if (key === 't') {
@@ -1339,6 +1551,9 @@
         } else if (key === 'backspace') {
           e.preventDefault();
           scrollToTop();
+        } else if (key === 'h') {
+          e.preventDefault();
+          document.documentElement.classList.toggle('hudless');
         }
       });
 
@@ -1380,6 +1595,95 @@
       window.addEventListener('scroll', onScroll, { passive: true });
       window.addEventListener('resize', onScroll);
       onScroll();
+    })();
+  </script>
+  <script>
+    // Gallery lightbox: click any .article-gallery image to view it
+    // full-screen, with prev/next arrows and a thumbnail carousel
+    // cycling through every gallery image on the page (in document
+    // order, spanning all five node sections).
+    (function () {
+      var galleryImages = Array.prototype.slice.call(document.querySelectorAll('.article-gallery img'));
+      if (!galleryImages.length) return;
+
+      var lightbox = document.getElementById('lightbox');
+      var lightboxImage = document.getElementById('lightboxImage');
+      var lightboxCarousel = document.getElementById('lightboxCarousel');
+      var closeBtn = document.getElementById('lightboxClose');
+      var prevBtn = document.getElementById('lightboxPrev');
+      var nextBtn = document.getElementById('lightboxNext');
+      var currentIndex = 0;
+
+      var thumbs = galleryImages.map(function (img, i) {
+        var thumb = document.createElement('img');
+        thumb.className = 'lightbox-thumb';
+        thumb.src = img.currentSrc || img.src;
+        thumb.alt = '';
+        thumb.setAttribute('aria-hidden', 'true');
+        thumb.addEventListener('click', function () {
+          show(i);
+        });
+        lightboxCarousel.appendChild(thumb);
+        return thumb;
+      });
+
+      function show(index) {
+        currentIndex = (index + galleryImages.length) % galleryImages.length;
+        var img = galleryImages[currentIndex];
+        lightboxImage.src = img.currentSrc || img.src;
+        lightboxImage.alt = img.alt;
+        thumbs.forEach(function (t, i) {
+          t.classList.toggle('is-active', i === currentIndex);
+        });
+        thumbs[currentIndex].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      }
+
+      function openLightbox(index) {
+        show(index);
+        lightbox.classList.add('is-open');
+        lightbox.setAttribute('aria-hidden', 'false');
+        document.documentElement.classList.add('lightbox-open');
+      }
+
+      function closeLightbox() {
+        lightbox.classList.remove('is-open');
+        lightbox.setAttribute('aria-hidden', 'true');
+        document.documentElement.classList.remove('lightbox-open');
+      }
+
+      galleryImages.forEach(function (img, i) {
+        img.addEventListener('click', function () {
+          openLightbox(i);
+        });
+      });
+
+      closeBtn.addEventListener('click', closeLightbox);
+      prevBtn.addEventListener('click', function () {
+        show(currentIndex - 1);
+      });
+      nextBtn.addEventListener('click', function () {
+        show(currentIndex + 1);
+      });
+
+      lightbox.addEventListener('click', function (e) {
+        if (e.target === lightbox || e.target === lightbox.querySelector('.lightbox-main')) {
+          closeLightbox();
+        }
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (!lightbox.classList.contains('is-open')) return;
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          closeLightbox();
+        } else if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          show(currentIndex - 1);
+        } else if (e.key === 'ArrowRight') {
+          e.preventDefault();
+          show(currentIndex + 1);
+        }
+      });
     })();
   </script>
   <script>
