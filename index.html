@@ -535,21 +535,49 @@
        click-to-top-of-article link - same fade/slide pattern as
        .back-to-top and .theme-toggle. Hovering anywhere in this box
        (title plus the section menu below it) reveals .mini-nav-menu -
-       see below. */
+       see below. Deliberately has no transform of its own: transform
+       on an ancestor makes it the containing block for any
+       position: fixed descendant, which would pin
+       .mini-nav-hover-zone to this small box instead of the
+       viewport. The slide animation lives on .mini-nav-content
+       instead. */
     position: fixed;
     top: 48px;
     left: 48px;
     opacity: 0;
-    transform: translateY(-10px);
     pointer-events: none;
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    transition: opacity 0.3s ease;
     z-index: 900;
   }
 
   .mini-nav.is-visible {
     opacity: 1;
-    transform: translateY(0);
     pointer-events: auto;
+  }
+
+  .mini-nav-content {
+    transform: translateY(-10px);
+    transition: transform 0.3s ease;
+  }
+
+  .mini-nav.is-visible .mini-nav-content {
+    transform: translateY(0);
+  }
+
+  .mini-nav-hover-zone {
+    /* Invisible hit-box, not just the small title/menu box itself:
+       hovering anywhere in the empty gutter to the left of the text
+       column reveals the menu too. Fixed independently of .mini-nav's
+       own 48px offset so it spans the actual left margin. Width
+       mirrors .article-content's own centering math (a 760px column,
+       centered once the viewport is wide enough for it); it's a
+       descendant of .mini-nav, so hovering it still counts as
+       hovering .mini-nav for the CSS below. */
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: max(0px, calc(50vw - 380px));
   }
 
   .mini-title {
@@ -1141,14 +1169,17 @@
   </section>
 
   <nav class="mini-nav" aria-label="Article sections">
-    <a class="mini-title" href="#article" aria-label="Scroll to top of article">Infrastructural<br>Gaianism</a>
-    <ul class="mini-nav-menu">
-      <li><a href="#node-fresco">Fresco &ndash; City-Systems</a></li>
-      <li><a href="#node-hall">Hall &ndash; Civium Project</a></li>
-      <li><a href="#node-ehrlich">Ehrlich &ndash; ReGen Villages</a></li>
-      <li><a href="#node-neos">Daranyi &ndash; Neos Village</a></li>
-      <li><a href="#node-sabol">Sabol &ndash; OneCommunityGlobal</a></li>
-    </ul>
+    <span class="mini-nav-hover-zone" aria-hidden="true"></span>
+    <div class="mini-nav-content">
+      <a class="mini-title" href="#article" aria-label="Scroll to top of article">Infrastructural<br>Gaianism</a>
+      <ul class="mini-nav-menu">
+        <li><a href="#node-fresco">Fresco &ndash; City-Systems</a></li>
+        <li><a href="#node-hall">Hall &ndash; Civium Project</a></li>
+        <li><a href="#node-ehrlich">Ehrlich &ndash; ReGen Villages</a></li>
+        <li><a href="#node-neos">Daranyi &ndash; Neos Village</a></li>
+        <li><a href="#node-sabol">Sabol &ndash; OneCommunityGlobal</a></li>
+      </ul>
+    </div>
   </nav>
 
   <a class="back-to-top" href="#top" aria-label="Scroll to top">
