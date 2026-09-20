@@ -333,13 +333,16 @@
        as part of the section wash rather than a separately-colored
        card within it. Text color is pinned regardless of theme, same
        reasoning as the hero text: this fill is fixed, not
-       theme-following. */
+       theme-following. Wider than a plain .article-quote (0 right
+       margin instead of 120px) since it's a section-level highlight,
+       not an indented inline quotation. */
     background: #fdf6e3;
     color: #1a1a17;
     padding: 20px 24px;
     border-left: 3px solid #eab308;
     border-radius: 6px;
     margin-top: 40px;
+    margin-right: 0;
     margin-bottom: 24px;
   }
 
@@ -526,14 +529,31 @@
     display: block;
   }
 
-  .mini-title {
+  .mini-nav {
     /* Appears once .article-byline (the "by ..." line under the main
        title) has scrolled out of view, standing in for it as a
        click-to-top-of-article link - same fade/slide pattern as
-       .back-to-top and .theme-toggle. */
+       .back-to-top and .theme-toggle. Hovering anywhere in this box
+       (title plus the section menu below it) reveals .mini-nav-menu -
+       see below. */
     position: fixed;
     top: 48px;
     left: 48px;
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 900;
+  }
+
+  .mini-nav.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .mini-title {
+    display: block;
     font-family: "ET Bembo", Georgia, "Times New Roman", serif;
     font-weight: 600;
     font-size: 1.6rem;
@@ -541,21 +561,47 @@
     letter-spacing: 0.01em;
     color: var(--fg);
     text-decoration: none;
-    opacity: 0;
-    transform: translateY(-10px);
-    pointer-events: none;
     filter: drop-shadow(0 2px 6px rgba(26, 26, 23, 0.35));
-    transition: opacity 0.3s ease, transform 0.3s ease, color 0.2s ease;
-    z-index: 900;
+    transition: color 0.2s ease;
   }
 
-  .mini-title.is-visible {
+  .mini-title:hover {
+    color: #16a34a;
+  }
+
+  .mini-nav-menu {
+    list-style: none;
+    margin-top: 14px;
+    opacity: 0;
+    transform: translateY(-6px);
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+
+  .mini-nav:hover .mini-nav-menu,
+  .mini-nav:focus-within .mini-nav-menu {
     opacity: 1;
     transform: translateY(0);
     pointer-events: auto;
   }
 
-  .mini-title:hover {
+  .mini-nav-menu li + li {
+    margin-top: 10px;
+  }
+
+  .mini-nav-menu a {
+    display: block;
+    font-family: "ET Bembo", Georgia, "Times New Roman", serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    letter-spacing: 0.005em;
+    color: var(--muted);
+    text-decoration: none;
+    filter: drop-shadow(0 2px 6px rgba(26, 26, 23, 0.35));
+    transition: color 0.2s ease;
+  }
+
+  .mini-nav-menu a:hover {
     color: #16a34a;
   }
 
@@ -1094,7 +1140,16 @@
     </div>
   </section>
 
-  <a class="mini-title" href="#article" aria-label="Scroll to top of article">Infrastructural<br>Gaianism</a>
+  <nav class="mini-nav" aria-label="Article sections">
+    <a class="mini-title" href="#article" aria-label="Scroll to top of article">Infrastructural<br>Gaianism</a>
+    <ul class="mini-nav-menu">
+      <li><a href="#node-fresco">Fresco &ndash; City-Systems</a></li>
+      <li><a href="#node-hall">Hall &ndash; Civium Project</a></li>
+      <li><a href="#node-ehrlich">Ehrlich &ndash; ReGen Villages</a></li>
+      <li><a href="#node-neos">Daranyi &ndash; Neos Village</a></li>
+      <li><a href="#node-sabol">Sabol &ndash; OneCommunityGlobal</a></li>
+    </ul>
+  </nav>
 
   <a class="back-to-top" href="#top" aria-label="Scroll to top">
     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1159,6 +1214,7 @@
       var progressFill = document.getElementById('progressBarFill');
       var yellowTeamingSection = document.getElementById('node-yellowteaming');
       var byline = document.querySelector('.article-byline');
+      var miniNav = document.querySelector('.mini-nav');
       var miniTitle = document.querySelector('.mini-title');
 
       function setFavicon(isDark) {
@@ -1284,9 +1340,9 @@
           if (progressBar) progressBar.classList.toggle('is-visible', pastHero);
         }
 
-        if (miniTitle && byline) {
+        if (miniNav && byline) {
           var bylineBottom = byline.offsetTop + byline.offsetHeight;
-          miniTitle.classList.toggle('is-visible', window.scrollY > bylineBottom);
+          miniNav.classList.toggle('is-visible', window.scrollY > bylineBottom);
         }
       }
 
