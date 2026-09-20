@@ -654,8 +654,11 @@
   /* :hover only (not :focus-within): the menu should stay open only
      while the cursor is actually in the left column, not linger
      because a clicked link kept keyboard focus after the mouse moved
-     away. */
-  .mini-nav:hover .mini-nav-menu {
+     away. .is-scrolling (JS-toggled) is the one deliberate exception:
+     it keeps the menu open for the duration of a click-triggered
+     scroll, wherever the cursor ends up. */
+  .mini-nav:hover .mini-nav-menu,
+  .mini-nav.is-scrolling .mini-nav-menu {
     opacity: 1;
     transform: translateY(0);
     pointer-events: auto;
@@ -1550,7 +1553,7 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
-      function smoothScrollTo(targetY, duration) {
+      function smoothScrollTo(targetY, duration, onComplete) {
         var startY = window.pageYOffset;
         var distance = targetY - startY;
         var startTime = null;
@@ -1560,18 +1563,25 @@
           var elapsed = now - startTime;
           var progress = Math.min(elapsed / duration, 1);
           window.scrollTo({ top: Math.round(startY + distance * progress), left: 0, behavior: 'auto' });
-          if (progress < 1) requestAnimationFrame(step);
+          if (progress < 1) {
+            requestAnimationFrame(step);
+          } else if (onComplete) {
+            onComplete();
+          }
         }
         requestAnimationFrame(step);
       }
 
-      function scrollToTarget(targetEl, offset) {
+      // Fixed px/ms rate (not clamped to a min/max duration) so the
+      // scroll always moves at the same speed, however far it travels.
+      var SCROLL_SPEED_PX_PER_MS = 2;
+
+      function scrollToTarget(targetEl, offset, onComplete) {
         if (!targetEl) return;
         var targetY = targetEl.getBoundingClientRect().top + window.pageYOffset - (offset || 0);
         var distance = Math.abs(targetY - window.pageYOffset);
-        // Speed factor 1.0 (duration = distance * 1.0, clamped).
-        var duration = Math.min(2000, Math.max(875, distance * 1.0));
-        smoothScrollTo(targetY, duration);
+        var duration = Math.max(1, distance / SCROLL_SPEED_PX_PER_MS);
+        smoothScrollTo(targetY, duration, onComplete);
       }
 
       function scrollToArticle() {
@@ -1602,7 +1612,13 @@
           var targetEl = document.getElementById(id);
           if (!targetEl) return;
           e.preventDefault();
-          scrollToTarget(targetEl, 64);
+          // Force the menu open for the scroll's duration regardless
+          // of where the cursor ends up, then hand back to the normal
+          // :hover-driven behavior once it lands.
+          if (miniNav) miniNav.classList.add('is-scrolling');
+          scrollToTarget(targetEl, 64, function () {
+            if (miniNav) miniNav.classList.remove('is-scrolling');
+          });
         });
       });
 
