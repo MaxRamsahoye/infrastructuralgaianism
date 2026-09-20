@@ -530,8 +530,25 @@
     color: #16a34a;
   }
 
-  .article-content p.article-divider-yellow {
-    color: #eab308;
+  .yellowteaming-box {
+    /* Pale yellow section wash, lighter than the quote's own fill
+       (#fff2cc) so the quote still reads as its own highlighted card
+       within the section. Text color is pinned regardless of theme -
+       same reasoning as the hero text and the quote box: this fill
+       doesn't follow the light/dark toggle. */
+    background: #fdf6e3;
+    color: #1a1a17;
+    padding: 48px 40px;
+    border-radius: 8px;
+    margin-top: 40px;
+  }
+
+  .yellowteaming-box > .article-section-title:first-child {
+    margin-top: 0;
+  }
+
+  .article-content .yellowteaming-box p.article-quote-attribution {
+    color: #5a5a52;
   }
 
   .article-gallery {
@@ -958,8 +975,9 @@
         Unlike <em>ReGen</em> and <em>Neos</em>, <em>OneCommunity</em> is defined by an open-source and (insofar as it is possible) non-commercial approach. Like the other projects it has a high cost: &lsquo;One Community is seeking between $20 million to $30 million in grants&hellip; for the purchase of land, startup costs, and the first two phases of the construction project for creating the example villages&rsquo;.
       </p>
 
-      <p class="article-divider article-divider-yellow" aria-hidden="true">***</p>
+      <p class="article-divider" aria-hidden="true">***</p>
 
+      <div class="yellowteaming-box">
       <h3 class="article-section-title" id="node-yellowteaming"><a class="yellow-link" href="https://consilienceproject.org/development-in-progress/#:~:text=yellow%20teaming.-,Yellow%20Teaming,such%20issues%20in%20advance%2C%20thereby%20minimizing%20the%20risk%20of%20negative%20externalities.,-The%20practice%20of"><em>Yellow Teaming</em></a>: Accounting for Potential Problems</h3>
 
       <p class="article-quote article-quote-highlight">
@@ -997,8 +1015,9 @@
       <p>
         It doesn&rsquo;t ultimately matter if there is a decentralised network of eco-cities &ndash; even if half the world transitions to this &ndash; if the old civilisation keeps on running and fucks everything up, likely by engaging in power competition with the new civilisation (to the point above).
       </p>
+      </div>
 
-      <p class="article-divider article-divider-yellow" aria-hidden="true">***</p>
+      <p class="article-divider" aria-hidden="true">***</p>
     </div>
   </section>
 
