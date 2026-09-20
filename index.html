@@ -23,6 +23,21 @@
       }
     } catch (e) {}
   })();
+
+  // In-app browsers (LinkedIn's iOS one identifies itself with
+  // "LinkedInApp" in its user agent) render text noticeably larger than
+  // standalone Safari does on the same device - some apply their own
+  // extra scaling on top of Safari's, or don't respect the same
+  // text-size-adjust behavior. Flagged synchronously, before first
+  // paint, so the compensating CSS below is already in effect on the
+  // first frame rather than visibly resizing text after load.
+  (function () {
+    try {
+      if (/LinkedInApp/i.test(navigator.userAgent)) {
+        document.documentElement.classList.add('linkedin-app');
+      }
+    } catch (e) {}
+  })();
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -69,12 +84,12 @@
     transition: background-color 0.35s ease, color 0.35s ease;
   }
 
-  html {
-    /* Without this, Mobile Safari silently boosts font sizes in text
-       columns it judges "too small" for the viewport, on top of the
-       sizes set explicitly below - producing layout that doesn't match
-       what's authored/tested (and differs from Chromium, which has no
-       such behavior). */
+  /* Pinning text-size-adjust globally (rather than just for
+     .linkedin-app below) turned out to make standalone Mobile Safari's
+     text render too small - whatever auto-adjustment it was doing on
+     top of the sizes below was apparently wanted, not a bug. Scoped
+     narrowly instead, to the one place it's actually needed. */
+  html.linkedin-app {
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
   }
