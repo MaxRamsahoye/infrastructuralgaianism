@@ -345,7 +345,7 @@
   }
 
   html.dark-theme .article-content p.article-quote-highlight {
-    background: #a16207;
+    background: #767600;
     color: #ffffff;
   }
 
@@ -477,6 +477,13 @@
     color: #16a34a;
   }
 
+  /* While scrolled into the Yellow Teaming section (same trigger as
+     the progress bar's own yellow fill), the icon buttons' hover
+     accent switches from green to yellow too. */
+  html.in-yellow-section .back-to-top:hover {
+    color: #eab308;
+  }
+
   .back-to-top svg {
     width: 22px;
     height: 22px;
@@ -512,6 +519,10 @@
 
   .theme-toggle:hover {
     color: #16a34a;
+  }
+
+  html.in-yellow-section .theme-toggle:hover {
+    color: #eab308;
   }
 
   .theme-toggle svg {
@@ -699,7 +710,9 @@
   }
 
   html.dark-theme .yellowteaming-box {
-    background: #a16207;
+    /* True yellow hue (equal R/G, no blue) rather than the amber/gold
+       #a16207 previously used here, which read as orange. */
+    background: #767600;
     color: #ffffff;
   }
 
@@ -1568,14 +1581,18 @@
         progress = Math.max(0, Math.min(1, progress));
         if (progressFill) progressFill.style.height = (progress * 100) + '%';
 
-        if (progressFill && yellowTeamingSection) {
+        if (yellowTeamingSection) {
           // getBoundingClientRect (not offsetTop): .yellowteaming-box's
           // full-bleed .section-band wrapper is position: relative, so
           // offsetTop here would resolve against that nearby ancestor
           // instead of the document.
           var yellowTeamingTop = yellowTeamingSection.getBoundingClientRect().top + window.pageYOffset;
           var inYellowTeaming = window.scrollY + window.innerHeight / 2 >= yellowTeamingTop;
-          progressFill.classList.toggle('is-yellow', inYellowTeaming);
+          if (progressFill) progressFill.classList.toggle('is-yellow', inYellowTeaming);
+          // Read by the CSS below (icon hover colors) and by the
+          // cursor-trail script (a separate <script> block) to swap
+          // its accent from green to yellow while in this section.
+          document.documentElement.classList.toggle('in-yellow-section', inYellowTeaming);
         }
 
         if (hero && (backToTop || themeToggle || progressBar)) {
@@ -1740,7 +1757,16 @@
           hasMouse = true;
         });
 
-        var accentRGB = '22, 163, 74';
+        // Read live each frame (not cached): document.documentElement
+        // toggles 'in-yellow-section' from the other <script> block's
+        // onScroll(), so this stays in sync as the page scrolls
+        // through the Yellow Teaming section without any direct
+        // coupling between the two scripts.
+        function accentRGB() {
+          return document.documentElement.classList.contains('in-yellow-section')
+            ? '234, 179, 8'
+            : '22, 163, 74';
+        }
 
         function draw() {
           var now = performance.now();
@@ -1749,7 +1775,7 @@
           ctx.clearRect(0, 0, canvas.width, canvas.height);
 
           if (hasMouse) {
-            var rgb = accentRGB;
+            var rgb = accentRGB();
 
             var startIndex = points.length - 1;
             var dist = 0;
