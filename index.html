@@ -694,6 +694,15 @@
     color: #16a34a;
   }
 
+  /* Same specificity as the dark-theme override just below, so that
+     one - not this - still wins in dark mode (it needs to stay
+     black/white there for contrast against the section's own bright
+     fill; yellow text would be nearly invisible on it). This rule is
+     the one that applies in light mode. */
+  html.in-yellow-section .mini-nav-menu a.is-current {
+    color: #eab308;
+  }
+
   /* In dark mode, the Yellow Teaming section's own fill (#eed202, a
      bright yellow) sits directly behind this fixed corner menu once
      scrolled there - the theme's usual white-ish text and the yellow
@@ -1442,6 +1451,7 @@
         <li><a href="#node-ehrlich">Ehrlich &ndash; ReGen Villages</a></li>
         <li><a href="#node-neos">Daranyi &ndash; Neos Village</a></li>
         <li><a href="#node-sabol">Sabol &ndash; OneCommunityGlobal</a></li>
+        <li><a href="#node-yellowteaming">Yellowteaming &ndash; Strategic Considerations</a></li>
       </ul>
     </div>
   </nav>
@@ -1535,7 +1545,7 @@
       var miniTitle = document.querySelector('.mini-title');
       var miniNavHoverZone = document.querySelector('.mini-nav-hover-zone');
       // In document order, matching .mini-nav-menu's own link order.
-      var nodeSectionEls = ['node-fresco', 'node-hall', 'node-ehrlich', 'node-neos', 'node-sabol']
+      var nodeSectionEls = ['node-fresco', 'node-hall', 'node-ehrlich', 'node-neos', 'node-sabol', 'node-yellowteaming']
         .map(function (id) { return document.getElementById(id); })
         .filter(Boolean);
       var menuLinks = Array.prototype.slice.call(document.querySelectorAll('.mini-nav-menu a'));
