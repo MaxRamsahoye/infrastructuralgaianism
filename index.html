@@ -1158,15 +1158,45 @@
      screens - there's no room for both the 48px-inset UI and the
      6vw-padded article text - so hide them entirely rather than have
      them overlap. Kept as its own width-only query (no
-     orientation/portrait qualifier, and a wider threshold than the
-     query above) so it applies in landscape too and can't be missed by
-     an orientation mismatch; !important guards against the display
-     being overridden by anything else touching these elements. */
-  @media (max-width: 680px) {
+     orientation/portrait qualifier) so it applies in landscape too and
+     can't be missed by an orientation mismatch; !important guards
+     against the display being overridden by anything else touching
+     these elements.
+
+     1280px, not .mini-nav-hover-zone's narrower gutter formula: that
+     invisible hover strip is just a hit-target, and reaching zero
+     width doesn't mean the visible title/menu box is clear of the
+     article text. Measured directly instead (a Range over
+     .mini-title's actual text against .article-content's own
+     left-edge formula, both at the y-position they land at once
+     scrolled): the title's ink extends to x=238.58px from the fixed
+     48px inset, and .article-content's left edge is
+     0.5*viewport - 380px once its 760px cap is reached (below that
+     it's flush against the 6vw padding) - so the two stop colliding
+     only past ~1238px viewport width, i.e. most laptop and tablet
+     windows, not just phones. 1280px adds a small safety margin over
+     that measured crossover. */
+  @media (max-width: 1280px) {
     .mini-nav,
     .back-to-top,
     .theme-toggle {
       display: none !important;
+    }
+  }
+
+  /* Short viewports that aren't narrow - landscape phones chief among
+     them - aren't caught by the portrait-only query above, but the
+     same desktop-tuned 40vw content cap and 30.5% vertical anchor on
+     .hero-content overflows a short 100vh box for the same reasons it
+     overflowed a narrow one. Keyed on height (with a generous
+     max-width so it can't accidentally catch a merely-short desktop
+     browser window) rather than orientation, since height is what's
+     actually constrained here. */
+  @media (max-width: 1000px) and (max-height: 500px) {
+    .hero-content {
+      width: min(680px, 85vw);
+      max-width: min(680px, 85vw);
+      top: 50%;
     }
   }
 </style>
