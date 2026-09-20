@@ -1519,6 +1519,7 @@
       var byline = document.querySelector('.article-byline');
       var miniNav = document.querySelector('.mini-nav');
       var miniTitle = document.querySelector('.mini-title');
+      var miniNavHoverZone = document.querySelector('.mini-nav-hover-zone');
       // In document order, matching .mini-nav-menu's own link order.
       var nodeSectionEls = ['node-fresco', 'node-hall', 'node-ehrlich', 'node-neos', 'node-sabol']
         .map(function (id) { return document.getElementById(id); })
@@ -1715,15 +1716,28 @@
         }
       }
 
-      // Bottom-left icons (.back-to-top, .theme-toggle) auto-hide once
-      // the page has sat still for a moment, and reappear as soon as
-      // scrolling resumes. Hovering either icon suspends the idle
-      // timer entirely (not just resets it) so it can't vanish out
-      // from under the cursor while the mouse just sits there.
-      var isScrollIdle = false;
+      // Bottom-left icons (.back-to-top, .theme-toggle) auto-hide
+      // 0.5s after the page sits still, and only reappear once
+      // scrolling has been continuous for 0.25s (a brief nudge alone
+      // won't bring them back). Hovering either icon - or moving the
+      // cursor into the left column via the same invisible zone
+      // .mini-nav already uses - shows them immediately and suspends
+      // the idle timer entirely (not just resets it) so they can't
+      // vanish out from under the cursor while it just sits there.
+      // Starts true (hidden): otherwise the plain onScroll() listener
+      // below (which isn't streak-gated) would show the icons on the
+      // very first scroll past the hero without ever arming
+      // scheduleIdle(), leaving them stuck visible indefinitely.
+      var isScrollIdle = true;
       var isHoveringIcon = false;
       var scrollIdleTimer = null;
-      var SCROLL_IDLE_MS = 750;
+      var SCROLL_IDLE_MS = 500;
+      var SCROLL_REAPPEAR_MS = 250;
+      // If scroll events stop coming for longer than this, the next
+      // one starts a fresh streak instead of continuing the old one.
+      var SCROLL_STREAK_GAP_MS = 150;
+      var scrollStreakStart = 0;
+      var lastScrollEventTime = 0;
 
       function scheduleIdle() {
         clearTimeout(scrollIdleTimer);
@@ -1734,17 +1748,29 @@
         }, SCROLL_IDLE_MS);
       }
 
-      function markScrollActive() {
+      function showIconsNow() {
         isScrollIdle = false;
         onScroll();
         scheduleIdle();
       }
 
-      [backToTop, themeToggle].forEach(function (el) {
+      function handleScrollForIcons() {
+        var now = Date.now();
+        if (now - lastScrollEventTime > SCROLL_STREAK_GAP_MS) {
+          scrollStreakStart = now;
+        }
+        lastScrollEventTime = now;
+
+        if (now - scrollStreakStart >= SCROLL_REAPPEAR_MS) {
+          showIconsNow();
+        }
+      }
+
+      [backToTop, themeToggle, miniNavHoverZone].forEach(function (el) {
         if (!el) return;
         el.addEventListener('mouseenter', function () {
           isHoveringIcon = true;
-          markScrollActive();
+          showIconsNow();
         });
         el.addEventListener('mouseleave', function () {
           isHoveringIcon = false;
@@ -1752,7 +1778,7 @@
         });
       });
 
-      window.addEventListener('scroll', markScrollActive, { passive: true });
+      window.addEventListener('scroll', handleScrollForIcons, { passive: true });
       window.addEventListener('scroll', onScroll, { passive: true });
       window.addEventListener('resize', onScroll);
       onScroll();
