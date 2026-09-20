@@ -651,8 +651,11 @@
     transition: opacity 0.25s ease, transform 0.25s ease;
   }
 
-  .mini-nav:hover .mini-nav-menu,
-  .mini-nav:focus-within .mini-nav-menu {
+  /* :hover only (not :focus-within): the menu should stay open only
+     while the cursor is actually in the left column, not linger
+     because a clicked link kept keyboard focus after the mouse moved
+     away. */
+  .mini-nav:hover .mini-nav-menu {
     opacity: 1;
     transform: translateY(0);
     pointer-events: auto;
@@ -680,6 +683,12 @@
 
   html.in-yellow-section .mini-nav-menu a:hover {
     color: #eab308;
+  }
+
+  /* Tracks whichever node section is currently scrolled into view
+     (is-current is toggled in the scroll handler below). */
+  .mini-nav-menu a.is-current {
+    color: #16a34a;
   }
 
   /* In dark mode, the Yellow Teaming section's own fill (#eed202, a
@@ -1507,6 +1516,11 @@
       var byline = document.querySelector('.article-byline');
       var miniNav = document.querySelector('.mini-nav');
       var miniTitle = document.querySelector('.mini-title');
+      // In document order, matching .mini-nav-menu's own link order.
+      var nodeSectionEls = ['node-fresco', 'node-hall', 'node-ehrlich', 'node-neos', 'node-sabol']
+        .map(function (id) { return document.getElementById(id); })
+        .filter(Boolean);
+      var menuLinks = Array.prototype.slice.call(document.querySelectorAll('.mini-nav-menu a'));
 
       function setFavicon(isDark) {
         var suffix = isDark ? '-dark' : '';
@@ -1665,6 +1679,23 @@
         if (miniNav && byline) {
           var bylineBottom = byline.offsetTop + byline.offsetHeight;
           miniNav.classList.toggle('is-visible', window.scrollY > bylineBottom);
+        }
+
+        if (nodeSectionEls.length && menuLinks.length) {
+          // The current section is the last one whose heading has
+          // scrolled up near the top of the viewport; sections are in
+          // document order, so the first not-yet-passed one ends it.
+          var currentId = null;
+          for (var i = 0; i < nodeSectionEls.length; i++) {
+            if (nodeSectionEls[i].getBoundingClientRect().top <= 150) {
+              currentId = nodeSectionEls[i].id;
+            } else {
+              break;
+            }
+          }
+          menuLinks.forEach(function (a) {
+            a.classList.toggle('is-current', currentId !== null && a.getAttribute('href') === '#' + currentId);
+          });
         }
       }
 
