@@ -1652,8 +1652,13 @@
         if (hero && (backToTop || themeToggle || progressBar)) {
           var heroBottom = hero.offsetTop + hero.offsetHeight;
           var pastHero = window.scrollY >= heroBottom;
-          if (backToTop) backToTop.classList.toggle('is-visible', pastHero);
-          if (themeToggle) themeToggle.classList.toggle('is-visible', pastHero);
+          // The bottom-left icons additionally hide once the page has
+          // been still for a moment (see markScrollActive below);
+          // the progress bar isn't part of that, so it just tracks
+          // pastHero like before.
+          var showIcons = pastHero && !isScrollIdle;
+          if (backToTop) backToTop.classList.toggle('is-visible', showIcons);
+          if (themeToggle) themeToggle.classList.toggle('is-visible', showIcons);
           if (progressBar) progressBar.classList.toggle('is-visible', pastHero);
         }
 
@@ -1663,6 +1668,44 @@
         }
       }
 
+      // Bottom-left icons (.back-to-top, .theme-toggle) auto-hide once
+      // the page has sat still for a moment, and reappear as soon as
+      // scrolling resumes. Hovering either icon suspends the idle
+      // timer entirely (not just resets it) so it can't vanish out
+      // from under the cursor while the mouse just sits there.
+      var isScrollIdle = false;
+      var isHoveringIcon = false;
+      var scrollIdleTimer = null;
+      var SCROLL_IDLE_MS = 1500;
+
+      function scheduleIdle() {
+        clearTimeout(scrollIdleTimer);
+        scrollIdleTimer = setTimeout(function () {
+          if (isHoveringIcon) return;
+          isScrollIdle = true;
+          onScroll();
+        }, SCROLL_IDLE_MS);
+      }
+
+      function markScrollActive() {
+        isScrollIdle = false;
+        onScroll();
+        scheduleIdle();
+      }
+
+      [backToTop, themeToggle].forEach(function (el) {
+        if (!el) return;
+        el.addEventListener('mouseenter', function () {
+          isHoveringIcon = true;
+          markScrollActive();
+        });
+        el.addEventListener('mouseleave', function () {
+          isHoveringIcon = false;
+          scheduleIdle();
+        });
+      });
+
+      window.addEventListener('scroll', markScrollActive, { passive: true });
       window.addEventListener('scroll', onScroll, { passive: true });
       window.addEventListener('resize', onScroll);
       onScroll();
