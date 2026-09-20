@@ -820,6 +820,19 @@
     background: #eed202;
   }
 
+  /* .yellow-link's own yellow (#eab308) is how these links read against
+     the page's usual background, but here the section fill itself is
+     yellow (#eed202) in dark mode - text and background nearly the
+     same hue, close to unreadable. White instead. */
+  html.dark-theme .yellowteaming-box a.yellow-link {
+    color: #ffffff;
+    border-bottom-color: rgba(255, 255, 255, 0.45);
+  }
+
+  html.dark-theme .yellowteaming-box a.yellow-link:hover {
+    border-bottom-color: #ffffff;
+  }
+
   .article-content .yellowteaming-box p.article-quote-attribution {
     color: #5a5a52;
   }
