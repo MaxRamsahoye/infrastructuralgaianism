@@ -567,6 +567,10 @@
        doesn't follow the light/dark toggle. */
     background: #fdf6e3;
     color: #1a1a17;
+    /* The last section on the page: cancel out .article's own
+       padding-bottom (3rem) so this fill reaches the literal bottom
+       of the page instead of leaving a page-background bar under it. */
+    margin-bottom: -3rem;
   }
 
   .article-content .yellowteaming-box p.article-quote-attribution {
@@ -574,14 +578,11 @@
   }
 
   .humanreasons-box {
-    /* Unlike the yellow team box, this background follows the theme
-       toggle (pale green / midnight blue), so text just uses the
-       normal var(--fg) instead of a pinned color. */
+    /* Pale green wash, pinned regardless of theme (same reasoning as
+       the yellow team box) so it stays the same green in dark mode
+       instead of swapping to a dark fill. */
     background: #dcedde;
-  }
-
-  html.dark-theme .humanreasons-box {
-    background: #0a183d;
+    color: #1a1a17;
   }
 
   .article-gallery {
@@ -1216,7 +1217,12 @@
         if (progressFill) progressFill.style.height = (progress * 100) + '%';
 
         if (progressFill && yellowTeamingSection) {
-          var inYellowTeaming = window.scrollY + window.innerHeight / 2 >= yellowTeamingSection.offsetTop;
+          // getBoundingClientRect (not offsetTop): .yellowteaming-box's
+          // full-bleed .section-band wrapper is position: relative, so
+          // offsetTop here would resolve against that nearby ancestor
+          // instead of the document.
+          var yellowTeamingTop = yellowTeamingSection.getBoundingClientRect().top + window.pageYOffset;
+          var inYellowTeaming = window.scrollY + window.innerHeight / 2 >= yellowTeamingTop;
           progressFill.classList.toggle('is-yellow', inYellowTeaming);
         }
 
