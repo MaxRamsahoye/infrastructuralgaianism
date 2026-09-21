@@ -1039,16 +1039,23 @@
     background: var(--bg);
     z-index: 5000;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 28px;
     transition: opacity 0.6s ease;
   }
 
   .loading-screen.is-hidden {
     opacity: 0;
     pointer-events: none;
+  }
+
+  .loader-wrap {
+    position: relative;
+    width: min(190px, 42vw);
+    height: min(190px, 42vw);
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .dome-loader {
@@ -1103,20 +1110,39 @@
     }
   }
 
-  .loading-progress {
-    width: min(160px, 36vw);
-    height: 6px;
-    border-radius: 999px;
-    background: rgba(26, 26, 23, 0.1);
-    overflow: hidden;
+  .loading-ring {
+    /* Sits behind .dome-loader in the same centered stack, sized up
+       from it so the ring clears the pentagon's outer points with
+       visible spacing instead of touching them. */
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    /* SVG circles start their path at 3 o'clock; rotate so the fill
+       starts at 12 and sweeps clockwise like the old left-to-right
+       pill did. */
+    transform: rotate(-90deg);
   }
 
-  .loading-progress-fill {
-    height: 100%;
-    width: 0%;
-    border-radius: 999px;
-    background: #16a34a;
-    transition: width linear;
+  .loading-ring-track {
+    fill: none;
+    stroke: rgba(26, 26, 23, 0.1);
+    stroke-width: 3;
+  }
+
+  html.dark-theme .loading-ring-track {
+    stroke: rgba(255, 255, 255, 0.1);
+  }
+
+  .loading-ring-fill {
+    fill: none;
+    stroke: #16a34a;
+    stroke-width: 3;
+    stroke-linecap: round;
+    /* 2 * pi * r(44) */
+    stroke-dasharray: 276.46;
+    stroke-dashoffset: 276.46;
+    transition: stroke-dashoffset linear;
   }
 
   /* Phones in portrait specifically (not landscape, where the wider
@@ -1233,15 +1259,18 @@
 <body>
 
   <div class="loading-screen" id="loadingScreen" aria-hidden="true">
-    <svg class="dome-loader" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-      <polygon class="pentagon-triangle" style="--i:4" points="33.48,29.96 33.48,8.64 53.76,23.37"/>
-      <polygon class="pentagon-triangle" style="--i:3" points="34.40,32.78 54.68,26.19 46.93,50.03"/>
-      <polygon class="pentagon-triangle" style="--i:2" points="32.00,34.52 44.53,51.77 19.47,51.77"/>
-      <polygon class="pentagon-triangle" style="--i:1" points="29.60,32.78 17.07,50.03 9.32,26.19"/>
-      <polygon class="pentagon-triangle" style="--i:0" points="30.52,29.96 10.24,23.37 30.52,8.64"/>
-    </svg>
-    <div class="loading-progress" aria-hidden="true">
-      <div class="loading-progress-fill" id="loadingProgressFill"></div>
+    <div class="loader-wrap">
+      <svg class="loading-ring" viewBox="0 0 100 100" aria-hidden="true">
+        <circle class="loading-ring-track" cx="50" cy="50" r="44"/>
+        <circle class="loading-ring-fill" id="loadingProgressFill" cx="50" cy="50" r="44"/>
+      </svg>
+      <svg class="dome-loader" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <polygon class="pentagon-triangle" style="--i:4" points="33.48,29.96 33.48,8.64 53.76,23.37"/>
+        <polygon class="pentagon-triangle" style="--i:3" points="34.40,32.78 54.68,26.19 46.93,50.03"/>
+        <polygon class="pentagon-triangle" style="--i:2" points="32.00,34.52 44.53,51.77 19.47,51.77"/>
+        <polygon class="pentagon-triangle" style="--i:1" points="29.60,32.78 17.07,50.03 9.32,26.19"/>
+        <polygon class="pentagon-triangle" style="--i:0" points="30.52,29.96 10.24,23.37 30.52,8.64"/>
+      </svg>
     </div>
   </div>
 
@@ -1621,11 +1650,11 @@
 
         if (loadingProgressFill) {
           if (reduceMotion) {
-            loadingProgressFill.style.width = '100%';
+            loadingProgressFill.style.strokeDashoffset = '0';
           } else {
             requestAnimationFrame(function () {
               loadingProgressFill.style.transitionDuration = drawTime + 'ms';
-              loadingProgressFill.style.width = '100%';
+              loadingProgressFill.style.strokeDashoffset = '0';
             });
           }
         }
