@@ -823,14 +823,15 @@
   /* .yellow-link's own yellow (#eab308) is how these links read against
      the page's usual background, but here the section fill itself is
      yellow (#eed202) in dark mode - text and background nearly the
-     same hue, close to unreadable. White instead. */
+     same hue, close to unreadable. Black instead, matching the rest of
+     this section's dark-mode body text. */
   html.dark-theme .yellowteaming-box a.yellow-link {
-    color: #ffffff;
-    border-bottom-color: rgba(255, 255, 255, 0.45);
+    color: #1a1a17;
+    border-bottom-color: rgba(26, 26, 23, 0.45);
   }
 
   html.dark-theme .yellowteaming-box a.yellow-link:hover {
-    border-bottom-color: #ffffff;
+    border-bottom-color: #1a1a17;
   }
 
   .article-content .yellowteaming-box p.article-quote-attribution {
@@ -1051,8 +1052,8 @@
   }
 
   .dome-loader {
-    width: min(200px, 44vw);
-    height: min(200px, 44vw);
+    width: min(130px, 30vw);
+    height: min(130px, 30vw);
     overflow: visible;
   }
 
