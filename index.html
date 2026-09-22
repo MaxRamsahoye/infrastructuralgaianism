@@ -524,11 +524,15 @@
   }
 
   .theme-toggle {
-    position: fixed;
-    bottom: 48px;
-    /* To the right of .back-to-top: its own 48px left offset, plus
-       its 22px icon width, plus a 24px gap. */
-    left: 94px;
+    /* Lives in the hero's own top-right corner now (not the bottom-left
+       icon cluster, which only appears once scrolled into the
+       article) - it's the one icon that makes sense to reach for
+       immediately, before scrolling at all. Positioned against .hero
+       (position: relative) rather than the viewport, so it scrolls
+       away with the hero like .scroll-arrow does. */
+    position: absolute;
+    top: 48px;
+    right: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -536,35 +540,25 @@
     border: none;
     padding: 0;
     cursor: pointer;
-    color: var(--fg);
-    opacity: 0;
-    transform: translateY(10px);
-    pointer-events: none;
-    filter: drop-shadow(0 2px 6px rgba(26, 26, 23, 0.35));
-    transition: opacity 0.3s ease, transform 0.3s ease, color 0.2s ease;
-    z-index: 900;
+    /* Hardcoded, not var(--fg), for the same reason as .hero h1 and
+       .scroll-arrow: it sits on the fixed photo, not the page
+       background, and must stay legible through the day/night
+       cross-fade regardless of the light/dark theme toggle. */
+    color: #1a1a17;
+    opacity: 0.75;
+    filter: drop-shadow(0 0 16px rgba(255, 255, 255, 0.85));
+    transition: color 1.1s ease, filter 1.1s ease, opacity 0.2s ease;
+    z-index: 10;
   }
 
-  .theme-toggle.is-visible {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
+  html.dark-theme .theme-toggle {
+    color: #ffffff;
+    filter: drop-shadow(0 0 16px rgba(0, 0, 0, 0.7));
   }
 
   .theme-toggle:hover {
+    opacity: 1;
     color: #16a34a;
-  }
-
-  html.in-yellow-section .theme-toggle:hover {
-    color: #eab308;
-  }
-
-  html.dark-theme.in-yellow-section .theme-toggle {
-    color: #1a1a17;
-  }
-
-  html.dark-theme.in-yellow-section .theme-toggle:hover {
-    color: #ffffff;
   }
 
   .theme-toggle svg {
@@ -582,8 +576,9 @@
   }
 
   /* Hudless mode ('h' shortcut): hides the icon buttons and progress
-     bar for a distraction-free view, overriding their own
-     scroll-driven is-visible state. */
+     bar for a distraction-free view, overriding back-to-top's and
+     progress-bar's own scroll-driven is-visible state (theme-toggle
+     has no such state to override - it's just always on otherwise). */
   html.hudless .back-to-top,
   html.hudless .theme-toggle,
   html.hudless .progress-bar {
@@ -599,7 +594,7 @@
     /* Appears once .article-byline (the "by ..." line under the main
        title) has scrolled out of view, standing in for it as a
        click-to-top-of-article link - same fade/slide pattern as
-       .back-to-top and .theme-toggle. Hovering anywhere in this box
+       .back-to-top. Hovering anywhere in this box
        (title plus the section menu below it) reveals .mini-nav-menu -
        see below. Deliberately has no transform of its own: transform
        on an ancestor makes it the containing block for any
@@ -1212,14 +1207,16 @@
   }
 
   /* These fixed corner elements (top-left title/menu, bottom-left
-     back-to-top and theme toggle) clip into the text column on narrow
-     screens - there's no room for both the 48px-inset UI and the
-     6vw-padded article text - so hide them entirely rather than have
-     them overlap. Kept as its own width-only query (no
-     orientation/portrait qualifier) so it applies in landscape too and
-     can't be missed by an orientation mismatch; !important guards
-     against the display being overridden by anything else touching
-     these elements.
+     back-to-top) clip into the text column on narrow screens - there's
+     no room for both the 48px-inset UI and the 6vw-padded article text
+     - so hide them entirely rather than have them overlap.
+     .theme-toggle isn't part of this: it now lives in the hero's own
+     top-right corner (over the photo, not the article text column),
+     so it has nothing to overlap here. Kept as its own width-only
+     query (no orientation/portrait qualifier) so it applies in
+     landscape too and can't be missed by an orientation mismatch;
+     !important guards against the display being overridden by
+     anything else touching these elements.
 
      1280px, not .mini-nav-hover-zone's narrower gutter formula: that
      invisible hover strip is just a hit-target, and reaching zero
@@ -1236,8 +1233,7 @@
      that measured crossover. */
   @media (max-width: 1280px) {
     .mini-nav,
-    .back-to-top,
-    .theme-toggle {
+    .back-to-top {
       display: none !important;
     }
   }
@@ -1295,6 +1291,15 @@
         </svg>
       </a>
     </div>
+    <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.3"/>
+        <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M4.9 19.1l1.7-1.7M17.4 6.6l1.7-1.7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+      </svg>
+    </button>
   </section>
 
   <section id="article" class="article">
@@ -1605,16 +1610,6 @@
     </svg>
   </a>
 
-  <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.3"/>
-      <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M4.9 19.1l1.7-1.7M17.4 6.6l1.7-1.7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
-    </svg>
-  </button>
-
   <div class="lightbox" id="lightbox" aria-hidden="true">
     <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Close gallery view">
       <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1847,16 +1842,17 @@
           document.documentElement.classList.toggle('in-yellow-section', inYellowTeaming);
         }
 
-        if (hero && (backToTop || themeToggle || progressBar)) {
+        if (hero && (backToTop || progressBar)) {
           var heroBottom = hero.offsetTop + hero.offsetHeight;
           var pastHero = window.scrollY >= heroBottom;
-          // The bottom-left icons additionally hide once the page has
+          // The bottom-left icon additionally hides once the page has
           // been still for a moment (see markScrollActive below);
           // the progress bar isn't part of that, so it just tracks
-          // pastHero like before.
+          // pastHero like before. .theme-toggle now lives in the hero
+          // itself (always visible there, via plain CSS) and isn't
+          // part of this scroll-driven show/hide at all.
           var showIcons = pastHero && !isScrollIdle;
           if (backToTop) backToTop.classList.toggle('is-visible', showIcons);
-          if (themeToggle) themeToggle.classList.toggle('is-visible', showIcons);
           if (progressBar) progressBar.classList.toggle('is-visible', pastHero);
         }
 
@@ -1883,18 +1879,17 @@
         }
       }
 
-      // Bottom-left icons (.back-to-top, .theme-toggle) auto-hide
-      // 0.5s after the page sits still, and only reappear once
-      // scrolling has been continuous for 0.25s (a brief nudge alone
-      // won't bring them back). Hovering either icon - or moving the
-      // cursor into the left column via the same invisible zone
-      // .mini-nav already uses - shows them immediately and suspends
-      // the idle timer entirely (not just resets it) so they can't
-      // vanish out from under the cursor while it just sits there.
-      // Starts true (hidden): otherwise the plain onScroll() listener
-      // below (which isn't streak-gated) would show the icons on the
+      // The back-to-top icon auto-hides 0.5s after the page sits
+      // still, and only reappears once scrolling has been continuous
+      // for 0.25s (a brief nudge alone won't bring it back). Hovering
+      // it - or moving the cursor into the left column via the same
+      // invisible zone .mini-nav already uses - shows it immediately
+      // and suspends the idle timer entirely (not just resets it) so
+      // it can't vanish out from under the cursor while it just sits
+      // there. Starts true (hidden): otherwise the plain onScroll()
+      // listener below (which isn't streak-gated) would show it on the
       // very first scroll past the hero without ever arming
-      // scheduleIdle(), leaving them stuck visible indefinitely.
+      // scheduleIdle(), leaving it stuck visible indefinitely.
       var isScrollIdle = true;
       var isHoveringIcon = false;
       var scrollIdleTimer = null;
@@ -1933,7 +1928,7 @@
         }
       }
 
-      [backToTop, themeToggle, miniNavHoverZone].forEach(function (el) {
+      [backToTop, miniNavHoverZone].forEach(function (el) {
         if (!el) return;
         el.addEventListener('mouseenter', function () {
           isHoveringIcon = true;
