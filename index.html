@@ -1789,6 +1789,25 @@
         });
       }
 
+      // Auto-triggers the down arrow's own action - scrolling to the
+      // article - if the page sits stationary at the top for 5s,
+      // nudging visitors who haven't scrolled on their own. Cancelled
+      // by any scroll (including the animated scroll it itself
+      // starts, so it never fires twice), so a visitor who scrolls
+      // manually within the window doesn't get yanked mid-read.
+      // Skipped entirely for prefers-reduced-motion, same as this
+      // page's other motion (see .pentagon-triangle above) - an
+      // animated scroll the visitor never asked for is exactly the
+      // kind of motion that setting exists to avoid.
+      if (link && article && !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) {
+        var autoScrollTimer = setTimeout(function () {
+          if (window.scrollY === 0) scrollToArticle();
+        }, 5000);
+        window.addEventListener('scroll', function () {
+          clearTimeout(autoScrollTimer);
+        }, { once: true, passive: true });
+      }
+
       // Section headings' own margin-top (breathing room above them)
       // is outside their border box, so a native #anchor jump lands
       // flush against the very top of the viewport with none of it
