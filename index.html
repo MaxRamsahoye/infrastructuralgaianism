@@ -473,7 +473,7 @@
 
   .back-to-top {
     position: fixed;
-    left: 48px;
+    right: 48px;
     bottom: 48px;
     display: flex;
     align-items: center;
@@ -521,6 +521,23 @@
     width: 22px;
     height: 22px;
     display: block;
+  }
+
+  .back-to-top-hover-zone {
+    /* Mirrors .mini-nav-hover-zone, on the right instead of the left:
+       an invisible hit-box spanning the empty gutter beside the text
+       column, wider than the icon itself, so hovering anywhere in
+       that margin (not just the 22px icon) reveals .back-to-top - see
+       the JS below. A plain sibling rather than a .back-to-top
+       descendant, since .back-to-top has its own transform (for the
+       show/hide slide), which would become the containing block for a
+       nested position: fixed element and break it (the same bug
+       .mini-nav-hover-zone was split out to avoid). */
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: max(0px, calc(50vw - 380px));
   }
 
   .theme-toggle {
@@ -1206,10 +1223,16 @@
     }
   }
 
-  /* These fixed corner elements (top-left title/menu, bottom-left
+  /* These fixed corner elements (top-left title/menu, bottom-right
      back-to-top) clip into the text column on narrow screens - there's
      no room for both the 48px-inset UI and the 6vw-padded article text
-     - so hide them entirely rather than have them overlap.
+     - so hide them entirely rather than have them overlap. The
+     threshold below was measured against the left-hand mini-nav title,
+     but .article-content is horizontally centered, so the right-hand
+     margin back-to-top now sits in is identical by symmetry; its own
+     22px icon needs far less clearance than that title's ink did, so
+     this is a conservative (safely-hides-a-bit-longer) rather than
+     exact threshold for it.
      .theme-toggle isn't part of this: it now lives in the hero's own
      top-right corner (over the photo, not the article text column),
      so it has nothing to overlap here. Kept as its own width-only
@@ -1604,6 +1627,7 @@
     </div>
   </nav>
 
+  <span class="back-to-top-hover-zone" aria-hidden="true"></span>
   <a class="back-to-top" href="#top" aria-label="Scroll to top">
     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M4 20 L12 3 L20 20 M4 20 L12 15.5 L20 20 M12 15.5 L12 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1681,7 +1705,7 @@
       var byline = document.querySelector('.article-byline');
       var miniNav = document.querySelector('.mini-nav');
       var miniTitle = document.querySelector('.mini-title');
-      var miniNavHoverZone = document.querySelector('.mini-nav-hover-zone');
+      var backToTopHoverZone = document.querySelector('.back-to-top-hover-zone');
       // In document order, matching .mini-nav-menu's own link order.
       var nodeSectionEls = ['node-fresco', 'node-hall', 'node-ehrlich', 'node-neos', 'node-sabol', 'node-yellowteaming']
         .map(function (id) { return document.getElementById(id); })
@@ -1882,14 +1906,14 @@
       // The back-to-top icon auto-hides 0.5s after the page sits
       // still, and only reappears once scrolling has been continuous
       // for 0.25s (a brief nudge alone won't bring it back). Hovering
-      // it - or moving the cursor into the left column via the same
-      // invisible zone .mini-nav already uses - shows it immediately
-      // and suspends the idle timer entirely (not just resets it) so
-      // it can't vanish out from under the cursor while it just sits
-      // there. Starts true (hidden): otherwise the plain onScroll()
-      // listener below (which isn't streak-gated) would show it on the
-      // very first scroll past the hero without ever arming
-      // scheduleIdle(), leaving it stuck visible indefinitely.
+      // it - or moving the cursor into the right column via
+      // .back-to-top-hover-zone - shows it immediately and suspends
+      // the idle timer entirely (not just resets it) so it can't
+      // vanish out from under the cursor while it just sits there.
+      // Starts true (hidden): otherwise the plain onScroll() listener
+      // below (which isn't streak-gated) would show it on the very
+      // first scroll past the hero without ever arming scheduleIdle(),
+      // leaving it stuck visible indefinitely.
       var isScrollIdle = true;
       var isHoveringIcon = false;
       var scrollIdleTimer = null;
@@ -1928,7 +1952,7 @@
         }
       }
 
-      [backToTop, miniNavHoverZone].forEach(function (el) {
+      [backToTop, backToTopHoverZone].forEach(function (el) {
         if (!el) return;
         el.addEventListener('mouseenter', function () {
           isHoveringIcon = true;
