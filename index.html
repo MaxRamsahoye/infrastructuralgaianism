@@ -1792,16 +1792,22 @@
       // Auto-triggers the down arrow's own action - scrolling to the
       // article - if the page sits stationary at the top for 5s,
       // nudging visitors who haven't scrolled on their own. Cancelled
-      // by any scroll (including the animated scroll it itself
-      // starts, so it never fires twice), so a visitor who scrolls
-      // manually within the window doesn't get yanked mid-read.
-      // Skipped entirely for prefers-reduced-motion, same as this
-      // page's other motion (see .pentagon-triangle above) - an
-      // animated scroll the visitor never asked for is exactly the
-      // kind of motion that setting exists to avoid.
-      if (link && article && !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) {
+      // by any scroll (including the scroll it itself starts, so it
+      // never fires twice), so a visitor who scrolls manually within
+      // the window doesn't get yanked mid-read. Still fires under
+      // prefers-reduced-motion - the navigation itself is what was
+      // asked for, not the animation - but jumps instantly rather than
+      // running the animated scroll in that case, same accommodation
+      // as this page's other motion (see .pentagon-triangle above).
+      if (link && article) {
+        var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         var autoScrollTimer = setTimeout(function () {
-          if (window.scrollY === 0) scrollToArticle();
+          if (window.scrollY !== 0) return;
+          if (reduceMotion) {
+            article.scrollIntoView();
+          } else {
+            scrollToArticle();
+          }
         }, 5000);
         window.addEventListener('scroll', function () {
           clearTimeout(autoScrollTimer);
