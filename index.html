@@ -1791,7 +1791,7 @@
 
       // Auto-triggers the down arrow's own action - scrolling to the
       // article, with its usual animation - if the page sits
-      // stationary at the top for 5s, nudging visitors who haven't
+      // stationary at the top for 7.5s, nudging visitors who haven't
       // scrolled on their own. Cancelled by any scroll (including the
       // scroll it itself starts, so it never fires twice), so a
       // visitor who scrolls manually within the window doesn't get
@@ -1799,7 +1799,7 @@
       if (link && article) {
         var autoScrollTimer = setTimeout(function () {
           if (window.scrollY === 0) scrollToArticle();
-        }, 5000);
+        }, 7500);
         window.addEventListener('scroll', function () {
           clearTimeout(autoScrollTimer);
         }, { once: true, passive: true });
