@@ -799,8 +799,6 @@
     margin-left: -50vw;
     padding: 64px 6vw;
     margin-top: 112px;
-    /* Only takes effect on .humanreasons-box: .yellowteaming-box
-       overrides this itself (flush to the page's bottom edge). */
     margin-bottom: 160px;
   }
 
@@ -831,14 +829,10 @@
        enough to need it. */
     background: #fdf6e3;
     color: #1a1a17;
-    /* Extra yellow breathing room above the heading and (since this is
-       the last section on the page) below the final paragraph. */
+    /* Extra yellow breathing room above the heading and below the
+       final paragraph. */
     padding-top: 112px;
-    padding-bottom: 128px;
-    /* The last section on the page: cancel out .article's own
-       padding-bottom (3rem) so this fill reaches the literal bottom
-       of the page instead of leaving a page-background bar under it. */
-    margin-bottom: -3rem;
+    padding-bottom: 112px;
   }
 
   html.dark-theme .yellowteaming-box {
@@ -1628,6 +1622,46 @@
       </p>
       </div>
       </div>
+
+      <h3 class="article-section-title" id="node-lifeworld">Life-World-Systems Change</h3>
+
+      <p>
+        Essentially, one of my central motivations is to actually build the new civilisation in prototype in the world:
+      </p>
+
+      <h4 class="article-subsection-title">Infrastructural</h4>
+
+      <p>
+        A high-tech, self-sufficient eco-village &ndash; then a city, then a network of cities, then a country etc.
+      </p>
+
+      <h4 class="article-subsection-title">Structural</h4>
+
+      <p>
+        Running on Joseph&rsquo;s <em>Integral</em> economic model.
+      </p>
+
+      <h4 class="article-subsection-title">Superstructural</h4>
+
+      <p>
+        That is also a deliberately developmental space: a form of metamodern monastery and therapeutic centre.
+      </p>
+
+      <p>
+        Getting funding for this megaproject &ndash; currently most closely approximated by something like <em>ReGen Villages</em> and <em>Neos Village</em> &ndash; and an organisation to execute it, is the concrete (design) problem and project here. Though one that I can only see myself contributing to in an intellectual and supporting capacity (as I don&rsquo;t have the technical, architectural or developmental skills to &lsquo;do the thing&rsquo; itself).
+      </p>
+
+      <p>
+        Admittedly, this is not a complete solution to the metacrisis itself, as it does not directly address the AI arms race dynamics and climate tragedy of the commons endemic to the legacy civilisation of states and capitalism.
+      </p>
+
+      <p>
+        However, in my mind it is a substantial part of transition &ndash; versus triage &ndash; that is novel to the metacrisis/metamodern project (versus more mainstream politics): a holistic transition across infrastructure, structure and superstructure.
+      </p>
+
+      <p>
+        This is what I see as important/valuable/meaningful and what I am seeking convergence on.
+      </p>
     </div>
   </section>
 
@@ -1642,6 +1676,7 @@
         <li><a href="#node-neos">Daranyi &ndash; Neos Village</a></li>
         <li><a href="#node-sabol">Sabol &ndash; OneCommunityGlobal</a></li>
         <li><a href="#node-yellowteaming">Yellowteaming &ndash; Strategic Considerations</a></li>
+        <li><a href="#node-lifeworld">Life-World-Systems Change</a></li>
       </ul>
     </div>
   </nav>
@@ -1721,12 +1756,13 @@
       var progressBar = document.querySelector('.progress-bar');
       var progressFill = document.getElementById('progressBarFill');
       var yellowTeamingSection = document.getElementById('node-yellowteaming');
+      var yellowTeamingBand = yellowTeamingSection && yellowTeamingSection.closest('.yellowteaming-box');
       var byline = document.querySelector('.article-byline');
       var miniNav = document.querySelector('.mini-nav');
       var miniTitle = document.querySelector('.mini-title');
       var backToTopHoverZone = document.querySelector('.back-to-top-hover-zone');
       // In document order, matching .mini-nav-menu's own link order.
-      var nodeSectionEls = ['node-fresco', 'node-hall', 'node-ehrlich', 'node-neos', 'node-sabol', 'node-yellowteaming']
+      var nodeSectionEls = ['node-fresco', 'node-hall', 'node-ehrlich', 'node-neos', 'node-sabol', 'node-yellowteaming', 'node-lifeworld']
         .map(function (id) { return document.getElementById(id); })
         .filter(Boolean);
       var menuLinks = Array.prototype.slice.call(document.querySelectorAll('.mini-nav-menu a'));
@@ -1893,7 +1929,14 @@
           // offsetTop here would resolve against that nearby ancestor
           // instead of the document.
           var yellowTeamingTop = yellowTeamingSection.getBoundingClientRect().top + window.pageYOffset;
-          var inYellowTeaming = window.scrollY + window.innerHeight / 2 >= yellowTeamingTop;
+          // Ends at the yellow band's bottom edge, not the page's: content
+          // follows it, and the dark-mode black-on-yellow overrides keyed
+          // off this class would be unreadable on the plain page below.
+          var yellowTeamingBottom = yellowTeamingBand
+            ? yellowTeamingBand.getBoundingClientRect().bottom + window.pageYOffset
+            : Infinity;
+          var viewportMid = window.scrollY + window.innerHeight / 2;
+          var inYellowTeaming = viewportMid >= yellowTeamingTop && viewportMid < yellowTeamingBottom;
           if (progressFill) progressFill.classList.toggle('is-yellow', inYellowTeaming);
           // Read by the CSS below (icon hover colors) and by the
           // cursor-trail script (a separate <script> block) to swap
