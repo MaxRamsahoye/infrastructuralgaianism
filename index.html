@@ -80,6 +80,14 @@
     font-display: swap;
   }
 
+  @font-face {
+    font-family: "IBM Plex Sans";
+    src: url("fonts/IBMPlexSans-SemiBold.woff2") format("woff2");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+  }
+
   :root {
     --bg: #f5f2ec;
     --fg: #1a1a17;
@@ -413,6 +421,54 @@
 
   .article-content a:hover {
     border-bottom-color: #16a34a;
+  }
+
+  /* Closing contact line: the whole tab is the link, so the full box
+     is clickable rather than just the name. */
+  .article-content a.contact-tab {
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+    margin-top: 16px;
+    padding: 14px 20px;
+    font-family: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 600;
+    /* Plex's x-height is much larger than ET Bembo's, so a smaller
+       size reads at roughly the same visual weight as the paragraphs. */
+    font-size: 1.05rem;
+    line-height: 1.45;
+    letter-spacing: 0;
+    color: var(--fg);
+    background: rgba(26, 26, 23, 0.04);
+    border: 1px solid rgba(26, 26, 23, 0.18);
+    border-radius: 10px;
+    transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .article-content a.contact-tab .contact-tab-name {
+    color: #16a34a;
+  }
+
+  .article-content a.contact-tab:hover,
+  .article-content a.contact-tab:focus-visible {
+    color: #16a34a;
+    background: rgba(22, 163, 74, 0.08);
+    border-color: #16a34a;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(22, 163, 74, 0.18);
+    outline: none;
+  }
+
+  html.dark-theme .article-content a.contact-tab {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  html.dark-theme .article-content a.contact-tab:hover,
+  html.dark-theme .article-content a.contact-tab:focus-visible {
+    background: rgba(22, 163, 74, 0.14);
+    border-color: #16a34a;
+    box-shadow: 0 6px 18px rgba(22, 163, 74, 0.25);
   }
 
   .article-content .num {
@@ -1669,7 +1725,7 @@
       </p>
 
       <p>
-        Contact me via email or LinkedIn on my personal page: <a href="https://maxramsahoye.github.io/max/">Max Ramsahoye</a>.
+        <a class="contact-tab" href="https://maxramsahoye.github.io/max/">Contact me via email or LinkedIn on my personal page: <span class="contact-tab-name">Max Ramsahoye</span></a>
       </p>
     </div>
   </section>
