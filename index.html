@@ -1465,6 +1465,8 @@
         <li><a href="#node-ehrlich">James Ehrlich&rsquo;s <em>ReGen Villages</em> (<span class="num">2015, 2026+</span>)</a></li>
         <li><a href="#node-neos">Vincent Daranyi and Karen Aiyana Birch&rsquo;s <em>Neos Village</em> (<span class="num">2023 - 2028</span>)</a></li>
         <li><a href="#node-sabol">Jae Sabol&rsquo;s <em>OneCommunityGlobal</em> (<span class="num">2010</span>)</a></li>
+        <li><a href="#node-yellowteaming"><em>Yellow Teaming</em>: Accounting for Potential Problems</a></li>
+        <li><a href="#node-lifeworld"><em>Life-World-Systems Change</em>: Holistic Civilisational Transition</a></li>
       </ol>
 
       <p>
@@ -1979,19 +1981,22 @@
       // Section headings' own margin-top (breathing room above them)
       // is outside their border box, so a native #anchor jump lands
       // flush against the very top of the viewport with none of it
-      // visible. Offset by that same 64px here instead.
-      document.querySelectorAll('.mini-nav-menu a').forEach(function (menuLink) {
-        menuLink.addEventListener('click', function (e) {
-          var id = menuLink.getAttribute('href').slice(1);
+      // visible. Offset by that same 64px here instead. Covers both
+      // the corner menu and the in-article section list, so they
+      // scroll identically.
+      document.querySelectorAll('.mini-nav-menu a, .article-content a[href^="#node-"]').forEach(function (sectionLink) {
+        var inMiniNav = !!sectionLink.closest('.mini-nav-menu');
+        sectionLink.addEventListener('click', function (e) {
+          var id = sectionLink.getAttribute('href').slice(1);
           var targetEl = document.getElementById(id);
           if (!targetEl) return;
           e.preventDefault();
-          // Force the menu open for the scroll's duration regardless
-          // of where the cursor ends up, then hand back to the normal
-          // :hover-driven behavior once it lands.
-          if (miniNav) miniNav.classList.add('is-scrolling');
+          // Corner menu only: force it open for the scroll's duration
+          // regardless of where the cursor ends up, then hand back to
+          // the normal :hover-driven behavior once it lands.
+          if (inMiniNav && miniNav) miniNav.classList.add('is-scrolling');
           scrollToTarget(targetEl, 64, function () {
-            if (miniNav) miniNav.classList.remove('is-scrolling');
+            if (inMiniNav && miniNav) miniNav.classList.remove('is-scrolling');
           });
         });
       });
