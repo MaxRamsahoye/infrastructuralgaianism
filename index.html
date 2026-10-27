@@ -1962,14 +1962,48 @@
         });
       }
 
+      // Deep links (a copied #node-... section link opened directly):
+      // the browser's own fragment jump lands the heading flush against
+      // the top of the viewport rather than 64px down like an in-page
+      // click, and can drift as fonts and gallery images load in above
+      // it. Re-land it at the same 64px offset now and again once the
+      // page has settled - unless the visitor has started scrolling.
+      var hashTarget = null;
+      if (/^#node-/.test(location.hash)) {
+        try {
+          hashTarget = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+        } catch (err) {}
+      }
+      if (hashTarget) {
+        if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+        var visitorScrolled = false;
+        ['wheel', 'touchmove', 'keydown', 'mousedown'].forEach(function (type) {
+          window.addEventListener(type, function () { visitorScrolled = true; }, { once: true, passive: true });
+        });
+        var landOnHashTarget = function () {
+          if (visitorScrolled) return;
+          var y = hashTarget.getBoundingClientRect().top + window.pageYOffset - 64;
+          window.scrollTo({ top: Math.max(0, y), left: 0, behavior: 'instant' });
+        };
+        landOnHashTarget();
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(landOnHashTarget);
+        window.addEventListener('load', function () {
+          landOnHashTarget();
+          // The browser can still apply its own fragment scroll just
+          // after load; correct for that too.
+          setTimeout(landOnHashTarget, 100);
+        });
+      }
+
       // Auto-triggers the down arrow's own action - scrolling to the
       // article, with its usual animation - if the page sits
       // stationary at the top for 7.5s, nudging visitors who haven't
       // scrolled on their own. Cancelled by any scroll (including the
       // scroll it itself starts, so it never fires twice), so a
       // visitor who scrolls manually within the window doesn't get
-      // yanked mid-read.
-      if (link && article) {
+      // yanked mid-read. Skipped for deep links, which already put the
+      // visitor where they meant to be.
+      if (link && article && !hashTarget) {
         var autoScrollTimer = setTimeout(function () {
           if (window.scrollY === 0) scrollToArticle();
         }, 7500);
